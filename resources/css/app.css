@@ -1,3 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-rose-900 focus:outline-none focus:ring-2 focus:ring-rose-500 transition;
+    }
+
+    .input-control {
+        @apply w-full rounded-lg border border-slate-800/40 focus:border-slate-900 focus:ring-2 focus:ring-rose-600 text-sm bg-white text-slate-900 placeholder-slate-500;
+    }
+
+    .select-control {
+        @apply w-full rounded-lg border border-slate-800/40 focus:border-slate-900 focus:ring-2 focus:ring-rose-600 text-sm bg-white text-slate-900;
+    }
+
+    .textarea-control {
+        @apply w-full rounded-lg border border-slate-800/40 focus:border-slate-900 focus:ring-2 focus:ring-rose-600 text-sm bg-white text-slate-900 placeholder-slate-500;
+    }
+
+    .section-container {
+        @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+}
+
+@layer base {
+    body {
+        @apply font-body;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-heading;
+    }
+}

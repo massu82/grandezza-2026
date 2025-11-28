@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'andres@m-studio.com.mx'],
             [
-                'name' => 'Admin',
-                'password' => Hash::make('password'),
+                'name' => 'Andrés Massuttier',
+                'password' => Hash::make('delDuero1'),
             ]
         );
 

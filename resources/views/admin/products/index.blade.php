@@ -22,6 +22,7 @@
                         <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Nombre</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Categoría</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Precio</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Stock</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Estado</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-slate-600">Acciones</th>
                     </tr>
@@ -32,6 +33,13 @@
                             <td class="px-4 py-3 text-sm font-medium text-slate-900">{{ $product->nombre }}</td>
                             <td class="px-4 py-3 text-sm text-slate-600">{{ $product->category->nombre ?? '—' }}</td>
                             <td class="px-4 py-3 text-sm text-slate-900">${{ number_format($product->precio, 2) }}</td>
+                            <td class="px-4 py-3 text-sm">
+                                @if($product->stock <= 0)
+                                    <span class="px-2 py-1 text-xs rounded-full bg-rose-50 text-rose-800">Agotado</span>
+                                @else
+                                    <span class="px-2 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700">{{ $product->stock }}</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-3 text-sm">
                                 @if($product->estado)
                                     <span class="px-2 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700">Activo</span>

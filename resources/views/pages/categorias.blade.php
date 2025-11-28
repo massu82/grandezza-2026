@@ -7,7 +7,7 @@
             @forelse($categories ?? [] as $category)
                 <a href="{{ url('/categorias/'.$category->slug) }}" class="block bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
                     <div class="h-28 w-full overflow-hidden">
-                        <img src="{{ $category->imagen ?? 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $category->nombre }}" class="w-full h-full object-cover">
+                        <img loading="lazy" src="{{ $category->imagen ?? 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $category->nombre }}" class="w-full h-full object-cover">
                     </div>
                     <div class="p-4">
                         <h2 class="text-lg font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">{{ $category->nombre }}</h2>

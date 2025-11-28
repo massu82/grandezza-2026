@@ -15,7 +15,7 @@
                                 </a>
                             </div>
                             <div class="w-full h-64 md:h-80 rounded-2xl overflow-hidden shadow-lg">
-                                <img src="{{ $promotion->banner ?? 'https://images.unsplash.com/photo-1514369118554-e20d93546b30?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $promotion->titulo }}" class="w-full h-full object-cover">
+                                <img loading="lazy" src="{{ $promotion->banner ?? 'https://images.unsplash.com/photo-1514369118554-e20d93546b30?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $promotion->titulo }}" class="w-full h-full object-cover">
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     <div class="swiper-slide pb-4">
                         <a href="{{ url('/categorias/'.$category->slug) }}" class="block bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
                             <div class="h-32 w-full overflow-hidden">
-                                <img src="{{ $category->imagen ?? 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $category->nombre }}" class="w-full h-full object-cover">
+                                <img loading="lazy" src="{{ $category->imagen ?? 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $category->nombre }}" class="w-full h-full object-cover">
                             </div>
                             <div class="p-4">
                                 <p class="text-xs uppercase tracking-wide text-slate-500">Categoría</p>

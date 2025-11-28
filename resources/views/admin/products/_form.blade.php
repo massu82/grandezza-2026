@@ -15,8 +15,20 @@
     <x-form-input name="sku" label="SKU" :value="$product->sku ?? ''" required />
     <x-form-select name="estado" label="Estado" :options="[1 => 'Activo', 0 => 'Inactivo']" :value="$product->estado ?? 1" />
     <x-form-select name="destacado" label="Destacado" :options="[1 => 'Sí', 0 => 'No']" :value="$product->destacado ?? 0" />
-    <x-form-input name="imagen_principal" label="Imagen principal (URL)" :value="$product->imagen_principal ?? ''" />
-    <x-form-textarea name="galeria" label="Galería (JSON)" :value="isset($product) ? json_encode($product->galeria) : ''" />
+    <div class="space-y-2">
+        <label class="block text-sm font-medium text-slate-700">Imagen principal</label>
+        <input type="file" name="imagen_principal" accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-slate-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-black file:text-white hover:file:bg-rose-900 border border-slate-300 rounded-lg focus:border-rose-700 focus:ring-rose-700">
+        @if(!empty($product->imagen_principal))
+            <p class="text-xs text-slate-500">Actual: {{ $product->imagen_principal }}</p>
+        @endif
+    </div>
+    <div class="space-y-2">
+        <label class="block text-sm font-medium text-slate-700">Galería</label>
+        <input type="file" name="galeria[]" multiple accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-slate-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-black file:text-white hover:file:bg-rose-900 border border-slate-300 rounded-lg focus:border-rose-700 focus:ring-rose-700">
+        @if(!empty($product->galeria))
+            <p class="text-xs text-slate-500">Actual: {{ is_array($product->galeria) ? implode(', ', $product->galeria) : $product->galeria }}</p>
+        @endif
+    </div>
 </div>
 <x-form-textarea name="descripcion_corta" label="Descripción corta" :value="$product->descripcion_corta ?? ''" />
 <x-form-textarea name="descripcion_larga" label="Descripción larga" :value="$product->descripcion_larga ?? ''" rows="6" />

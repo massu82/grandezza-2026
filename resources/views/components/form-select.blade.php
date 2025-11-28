@@ -8,7 +8,7 @@
         id="{{ $name }}"
         name="{{ $name }}"
         @required($required)
-        {{ $attributes->merge(['class' => 'w-full rounded-lg border border-slate-800/40 focus:border-slate-900 focus:ring-2 focus:ring-rose-600 text-sm bg-white text-slate-900']) }}
+        {{ $attributes->merge(['class' => 'select-control']) }}
     >
         @if($placeholder)
             <option value="">{{ $placeholder }}</option>

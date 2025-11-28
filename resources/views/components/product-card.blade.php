@@ -4,9 +4,25 @@
     $hasPromo = $product->precio_promocion && $product->precio_promocion > 0;
 @endphp
 
+@php
+    $base = $product->imagen_principal ?? null;
+    $isUrl = $base && str_starts_with($base, 'http');
+    $thumbWebp = $base && !$isUrl ? asset('storage/products/thumb/'.$base.'.webp') : null;
+    $thumbJpg = $base && !$isUrl ? asset('storage/products/thumb/'.$base.'.jpg') : null;
+    $fallback = $isUrl ? $base : 'https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=800&q=80';
+@endphp
+
 <div class="group bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col h-full">
     <div class="relative">
-        <img src="{{ $product->imagen_principal ?? 'https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=800&q=80' }}" alt="{{ $product->nombre }}" class="w-full h-56 object-cover">
+        <picture>
+            @if($thumbWebp)
+                <source srcset="{{ $thumbWebp }}" type="image/webp">
+            @endif
+            @if($thumbJpg)
+                <source srcset="{{ $thumbJpg }}" type="image/jpeg">
+            @endif
+            <img loading="lazy" src="{{ $thumbJpg ?? $fallback }}" alt="{{ $product->nombre }}" class="w-full h-56 object-cover">
+        </picture>
         <div class="absolute top-3 left-3 flex gap-2">
             @if($hasPromo)
                 <span class="text-xs px-2 py-1 bg-rose-900 text-white rounded-full">Promoción</span>
@@ -35,7 +51,7 @@
                 @endif
             </div>
         </div>
-        <form method="POST" action="{{ url('/carrito/agregar') }}" class="mt-auto pt-4">
+        <form method="POST" action="{{ url('/carrito/agregar') }}" class="mt-auto pt-4" data-cart-form>
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="quantity" value="1">

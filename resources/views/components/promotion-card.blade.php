@@ -11,6 +11,6 @@
         </a>
     </div>
     <div class="w-full md:w-56 h-36 rounded-xl overflow-hidden">
-        <img src="{{ $promotion->banner ?? 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80' }}" alt="{{ $promotion->titulo }}" class="w-full h-full object-cover">
+        <img loading="lazy" src="{{ $promotion->banner ?? 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80' }}" alt="{{ $promotion->titulo }}" class="w-full h-full object-cover">
     </div>
 </div>

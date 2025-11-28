@@ -12,14 +12,25 @@
 
         <div class="grid md:grid-cols-2 gap-8">
             <div>
+                @php
+                    $imgBase = $product->imagen_principal ?? null;
+                    $isUrl = $imgBase && str_starts_with($imgBase, 'http');
+                    $largeWebp = $imgBase && !$isUrl ? asset('storage/products/large/'.$imgBase.'.webp') : null;
+                    $largeJpg = $imgBase && !$isUrl ? asset('storage/products/large/'.$imgBase.'.jpg') : null;
+                    $fallbackImg = $isUrl ? $imgBase : 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1100&q=80';
+                @endphp
                 <div class="swiper productSwiper rounded-2xl overflow-hidden shadow">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <img src="{{ $product->imagen_principal ?? 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1100&q=80' }}" alt="{{ $product->nombre }}" class="w-full h-96 object-cover">
+                            <picture>
+                                @if($largeWebp)<source srcset="{{ $largeWebp }}" type="image/webp">@endif
+                                @if($largeJpg)<source srcset="{{ $largeJpg }}" type="image/jpeg">@endif
+                                <img loading="lazy" src="{{ $largeJpg ?? $fallbackImg }}" alt="{{ $product->nombre }}" class="w-full h-96 object-cover">
+                            </picture>
                         </div>
                         @foreach(($product->galeria ?? []) as $imagen)
                             <div class="swiper-slide">
-                                <img src="{{ $imagen }}" alt="{{ $product->nombre }}" class="w-full h-96 object-cover">
+                                <img loading="lazy" src="{{ $imagen }}" alt="{{ $product->nombre }}" class="w-full h-96 object-cover">
                             </div>
                         @endforeach
                     </div>
@@ -29,11 +40,17 @@
                     <div class="swiper productThumbs mt-3">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide cursor-pointer">
-                                <img src="{{ $product->imagen_principal ?? 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80' }}" alt="{{ $product->nombre }}" class="w-full h-20 object-cover rounded-lg border border-slate-200">
+                                <picture>
+                                    @if($imgBase && !$isUrl)
+                                        <source srcset="{{ asset('storage/products/thumb/'.$imgBase.'.webp') }}" type="image/webp">
+                                        <source srcset="{{ asset('storage/products/thumb/'.$imgBase.'.jpg') }}" type="image/jpeg">
+                                    @endif
+                                    <img loading="lazy" src="{{ $imgBase && !$isUrl ? asset('storage/products/thumb/'.$imgBase.'.jpg') : $fallbackImg }}" alt="{{ $product->nombre }}" class="w-full h-20 object-cover rounded-lg border border-slate-200">
+                                </picture>
                             </div>
                             @foreach($product->galeria as $imagen)
                                 <div class="swiper-slide cursor-pointer">
-                                    <img src="{{ $imagen }}" alt="{{ $product->nombre }}" class="w-full h-20 object-cover rounded-lg border border-slate-200">
+                                    <img loading="lazy" src="{{ $imagen }}" alt="{{ $product->nombre }}" class="w-full h-20 object-cover rounded-lg border border-slate-200">
                                 </div>
                             @endforeach
                         </div>
@@ -61,14 +78,19 @@
                     {!! nl2br(e($product->descripcion_larga)) !!}
                 </div>
                 <div class="flex items-center gap-3">
-                    <x-button-primary
-                        data-gtm-event="add_to_cart"
-                        data-gtm-product-id="{{ $product->id }}"
-                        data-gtm-product-name="{{ $product->nombre }}"
-                        data-meta-event="AddToCart"
-                    >
-                        Agregar al carrito
-                    </x-button-primary>
+                    <form method="POST" action="{{ url('/carrito/agregar') }}" data-cart-form>
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <x-button-primary
+                            data-gtm-event="add_to_cart"
+                            data-gtm-product-id="{{ $product->id }}"
+                            data-gtm-product-name="{{ $product->nombre }}"
+                            data-meta-event="AddToCart"
+                        >
+                            Agregar al carrito
+                        </x-button-primary>
+                    </form>
                     <button class="text-sm text-rose-900 underline" data-gtm-event="view_item" data-gtm-product-id="{{ $product->id }}">Ver detalles</button>
                     <div class="flex items-center gap-2 text-slate-600 text-sm ml-auto">
                         <span>Compartir:</span>

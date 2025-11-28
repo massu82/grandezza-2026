@@ -31,8 +31,9 @@ class ProductRequest extends FormRequest
             'sku' => ['required', 'string', 'max:255'],
             'estado' => ['required', 'integer', 'in:0,1'],
             'tags' => ['nullable', 'array'],
-            'imagen_principal' => ['nullable', 'string'],
-            'galeria' => ['nullable'],
+            'imagen_principal' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:1024'],
+            'galeria' => ['nullable', 'array'],
+            'galeria.*' => ['image', 'mimes:jpeg,png,webp', 'max:1024'],
             'destacado' => ['boolean'],
         ];
     }

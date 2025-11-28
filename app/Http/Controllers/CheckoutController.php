@@ -6,6 +6,8 @@ use App\Http\Requests\OrderRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Mail\OrderCreated;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -80,6 +82,16 @@ class CheckoutController extends Controller
                     'cantidad' => $item['quantity'],
                     'subtotal' => $price * $item['quantity'],
                 ]);
+            }
+
+            $order->load('items');
+
+            if ($request->filled('email_cliente')) {
+                Mail::to($request->email_cliente)->send(new OrderCreated($order, false));
+            }
+
+            if ($admin = config('mail.from.address')) {
+                Mail::to($admin)->send(new OrderCreated($order, true));
             }
         });
 

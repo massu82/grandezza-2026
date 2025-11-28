@@ -6,10 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     public function index(Request $request)
     {
         $query = Product::query()->with('category');
@@ -29,7 +34,10 @@ class ProductController extends Controller
             $query->where('estado', $request->integer('estado'));
         }
 
-        $products = $query->orderByDesc('created_at')->paginate(15)->withQueryString();
+        $products = $query
+            ->orderByDesc('created_at')
+            ->paginate(15)
+            ->withQueryString();
         $categorias = Category::pluck('nombre', 'id')->toArray();
 
         return view('admin.products.index', compact('products', 'categorias'));
@@ -46,6 +54,11 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $data = $this->mapData($request);
+
+        if ($request->hasFile('imagen_principal')) {
+            $data['imagen_principal'] = $this->imageService->process($request->file('imagen_principal'), 'products');
+        }
+
         Product::create($data);
 
         return redirect('/admin/products')->with('success', 'Producto creado.');
@@ -68,6 +81,14 @@ class ProductController extends Controller
     public function update(ProductRequest $request, Product $product)
     {
         $data = $this->mapData($request);
+
+        if ($request->hasFile('imagen_principal')) {
+            if ($product->imagen_principal) {
+                $this->imageService->delete($product->imagen_principal, 'products');
+            }
+            $data['imagen_principal'] = $this->imageService->process($request->file('imagen_principal'), 'products');
+        }
+
         $product->update($data);
 
         return redirect('/admin/products')->with('success', 'Producto actualizado.');
@@ -75,6 +96,9 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        if ($product->imagen_principal) {
+            $this->imageService->delete($product->imagen_principal, 'products');
+        }
         $product->delete();
 
         return redirect()->back()->with('success', 'Producto eliminado.');
@@ -100,24 +124,34 @@ class ProductController extends Controller
             'sku' => $request->sku,
             'estado' => $request->estado ?? 1,
             'tags' => $request->tags,
-            'imagen_principal' => $request->imagen_principal,
-            'galeria' => $this->decodeJson($request->galeria),
+            'galeria' => $this->handleGallery($request),
             'destacado' => (bool) $request->destacado,
         ];
     }
 
-    protected function decodeJson($value): ?array
+    protected function handleGallery(Request $request): ?array
     {
-        if (!$value) {
-            return null;
+        $gallery = [];
+
+        // mantener existente si no se envían nuevos archivos
+        if (!$request->hasFile('galeria') && $request->galeria === null && $request->route('product')) {
+            $existing = $request->route('product')->galeria ?? [];
+            return $existing ?: null;
         }
 
-        if (is_array($value)) {
-            return $value;
+        if ($request->hasFile('galeria')) {
+            // borrar existentes si hay nuevos
+            if ($request->route('product') && $request->route('product')->galeria) {
+                foreach ($request->route('product')->galeria as $img) {
+                    $this->imageService->delete($img, 'products');
+                }
+            }
+
+            foreach ($request->file('galeria') as $file) {
+                $gallery[] = $this->imageService->process($file, 'products');
+            }
         }
 
-        $decoded = json_decode($value, true);
-
-        return is_array($decoded) ? $decoded : null;
+        return $gallery ?: null;
     }
 }

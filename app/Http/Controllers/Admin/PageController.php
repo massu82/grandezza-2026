@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PageRequest;
 use App\Models\Page;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     public function index(Request $request)
     {
         $pages = Page::query()->orderBy('titulo')->paginate(15)->withQueryString();

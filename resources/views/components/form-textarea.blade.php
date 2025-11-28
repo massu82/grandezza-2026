@@ -10,7 +10,7 @@
         rows="{{ $rows }}"
         placeholder="{{ $placeholder }}"
         @required($required)
-        {{ $attributes->merge(['class' => 'w-full rounded-lg border border-slate-800/40 focus:border-slate-900 focus:ring-2 focus:ring-rose-600 text-sm bg-white text-slate-900 placeholder-slate-500']) }}
+        {{ $attributes->merge(['class' => 'textarea-control']) }}
     >{{ old($name, $value) }}</textarea>
     @error($name)
         <p class="text-xs text-rose-700">{{ $message }}</p>

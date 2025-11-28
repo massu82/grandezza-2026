@@ -7,16 +7,12 @@
 
     <title>{{ $title ?? 'Panel | ' . config('app.name', 'Vinatería') }}</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @stack('styles')
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased" style="font-family: 'Montserrat', system-ui, -apple-system, sans-serif;">
+<body class="bg-slate-100 text-slate-800 antialiased font-body">
     <div x-data="{ open: false }" class="min-h-screen flex">
         <aside class="bg-white shadow-md w-64 border-r border-slate-200 hidden md:flex flex-col">
             <div class="h-16 flex items-center px-6 border-b border-slate-100">

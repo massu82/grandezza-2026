@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PromotionRequest;
 use App\Models\Promotion;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 
 class PromotionController extends Controller
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     public function index(Request $request)
     {
         $query = Promotion::query();
@@ -30,7 +35,12 @@ class PromotionController extends Controller
 
     public function store(PromotionRequest $request)
     {
-        Promotion::create($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('banner')) {
+            $data['banner'] = $this->imageService->process($request->file('banner'), 'promotions');
+        }
+
+        Promotion::create($data);
 
         return redirect('/admin/promotions')->with('success', 'Promoción creada.');
     }
@@ -48,13 +58,24 @@ class PromotionController extends Controller
 
     public function update(PromotionRequest $request, Promotion $promotion)
     {
-        $promotion->update($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('banner')) {
+            if ($promotion->banner) {
+                $this->imageService->delete($promotion->banner, 'promotions');
+            }
+            $data['banner'] = $this->imageService->process($request->file('banner'), 'promotions');
+        }
+
+        $promotion->update($data);
 
         return redirect('/admin/promotions')->with('success', 'Promoción actualizada.');
     }
 
     public function destroy(Promotion $promotion)
     {
+        if ($promotion->banner) {
+            $this->imageService->delete($promotion->banner, 'promotions');
+        }
         $promotion->delete();
 
         return redirect()->back()->with('success', 'Promoción eliminada.');

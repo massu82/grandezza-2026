@@ -18,7 +18,7 @@
 <div x-cloak x-show="cartOpen" class="fixed inset-0 z-50 flex justify-end">
     <div class="absolute inset-0 bg-black/50" @click="cartOpen = false"></div>
     <div class="relative bg-white w-full sm:w-[420px] max-w-md h-full shadow-2xl border-l border-slate-200 flex flex-col"
-         x-data="cartDrawerComponent(@js($items), @js($total), '{{ csrf_token() }}')">
+         x-data="cartDrawerComponent(@js($items), @js($total), '{{ csrf_token() }}')" x-init="registerInstance()">
         <div class="px-4 py-4 border-b border-slate-200 flex items-center justify-between">
             <div>
                 <p class="text-xs uppercase tracking-[0.2em] text-rose-700">Carrito</p>
@@ -69,6 +69,20 @@
                     items: initialItems,
                     total: initialTotal,
                     loading: false,
+                    registerInstance() {
+                        window.cartDrawerController = window.cartDrawerController || {
+                            instances: [],
+                            update(items, total) {
+                                this.instances.forEach(i => i.setData(items, total));
+                                window.dispatchEvent(new Event('cart-open'));
+                            }
+                        };
+                        window.cartDrawerController.instances.push(this);
+                    },
+                    setData(items, total) {
+                        this.items = items;
+                        this.total = total;
+                    },
                     formatCurrency(value) {
                         return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value || 0);
                     },
@@ -88,8 +102,7 @@
                                 }),
                             });
                             const data = await response.json();
-                            this.items = data[0];
-                            this.total = data[1];
+                            this.setData(data[0], data[1]);
                         } catch (e) {
                             console.error(e);
                         } finally {
@@ -111,8 +124,7 @@
                                 }),
                             });
                             const data = await response.json();
-                            this.items = data[0];
-                            this.total = data[1];
+                            this.setData(data[0], data[1]);
                         } catch (e) {
                             console.error(e);
                         } finally {
@@ -121,6 +133,41 @@
                     },
                 };
             }
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const handler = async (form) => {
+                    const btn = form.querySelector('button[type="submit"]');
+                    btn?.setAttribute('disabled', 'disabled');
+                    try {
+                        const response = await fetch(form.action, {
+                            method: form.method,
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': form.querySelector('input[name="_token"]')?.value || '',
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams(new FormData(form)),
+                        });
+                        const data = await response.json();
+                        if (window.cartDrawerController) {
+                            window.cartDrawerController.update(data[0], data[1]);
+                        }
+                    } catch (e) {
+                        form.submit(); // fallback full submit
+                    } finally {
+                        btn?.removeAttribute('disabled');
+                    }
+                };
+
+                document.addEventListener('submit', (e) => {
+                    const form = e.target;
+                    if (form.matches('[data-cart-form]')) {
+                        e.preventDefault();
+                        handler(form);
+                    }
+                });
+            });
         </script>
     @endpush
 @endonce

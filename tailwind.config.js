@@ -13,6 +13,8 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                heading: ['"Playfair Display"', 'serif'],
+                body: ['Montserrat', 'sans-serif'],
             },
         },
     },

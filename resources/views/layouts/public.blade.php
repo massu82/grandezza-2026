@@ -8,10 +8,6 @@
     <title>{{ $title ?? config('app.name', 'Vinatería') }}</title>
     <meta name="description" content="{{ $metaDescription ?? '' }}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -62,7 +58,7 @@
         <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ env('META_PIXEL_ID') }}&ev=PageView&noscript=1"/></noscript>
     @endif
 </head>
-<body class="bg-white text-slate-900 antialiased" style="font-family: 'Montserrat', system-ui, -apple-system, sans-serif;">
+<body class="bg-white text-slate-900 antialiased font-body">
     <div
         class="min-h-screen flex flex-col"
         x-data="{
@@ -70,6 +66,7 @@
             cookiesAccepted: localStorage.getItem('cookiesAccepted') === 'true',
             cartOpen: false
         }"
+        @cart-open.window="cartOpen = true"
         x-init="
             $watch('ageVerified', v => { if(v) localStorage.setItem('ageVerified','true'); });
             $watch('cookiesAccepted', v => { if(v) localStorage.setItem('cookiesAccepted','true'); });

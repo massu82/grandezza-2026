@@ -1,7 +1,7 @@
 <x-layout-admin title="Productos">
     <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Productos</h1>
-        <a href="{{ url('/admin/products/create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-rose-900 text-white text-sm font-semibold hover:bg-rose-800">Nuevo producto</a>
+        <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Productos</h1>
+        <a href="{{ url('/admin/products/create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-secondary">Nuevo producto</a>
     </div>
 
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
@@ -35,7 +35,7 @@
                             <td class="px-4 py-3 text-sm text-slate-900">${{ number_format($product->precio, 2) }}</td>
                             <td class="px-4 py-3 text-sm">
                                 @if($product->stock <= 0)
-                                    <span class="px-2 py-1 text-xs rounded-full bg-rose-50 text-rose-800">Agotado</span>
+                                    <span class="px-2 py-1 text-xs rounded-full bg-light text-secondary">Agotado</span>
                                 @else
                                     <span class="px-2 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700">{{ $product->stock }}</span>
                                 @endif
@@ -48,7 +48,7 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-sm text-right space-x-2">
-                                <a href="{{ url('/admin/products/'.$product->id) }}" class="text-rose-900 hover:underline">Ver</a>
+                                <a href="{{ url('/admin/products/'.$product->id) }}" class="text-primary hover:underline">Ver</a>
                                 <a href="{{ url('/admin/products/'.$product->id.'/edit') }}" class="text-slate-700 hover:underline">Editar</a>
                             </td>
                         </tr>

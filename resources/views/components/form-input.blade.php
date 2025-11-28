@@ -2,7 +2,7 @@
 
 <div class="space-y-2">
     @if($label)
-        <label for="{{ $name }}" class="block text-sm font-medium text-slate-700">{{ $label }} @if($required)<span class="text-rose-700">*</span>@endif</label>
+        <label for="{{ $name }}" class="block text-sm font-medium text-slate-700">{{ $label }} @if($required)<span class="text-secondary">*</span>@endif</label>
     @endif
     <input
         id="{{ $name }}"
@@ -14,6 +14,6 @@
         {{ $attributes->merge(['class' => 'input-control']) }}
     >
     @error($name)
-        <p class="text-xs text-rose-700">{{ $message }}</p>
+        <p class="text-xs text-secondary">{{ $message }}</p>
     @enderror
 </div>

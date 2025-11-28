@@ -2,7 +2,7 @@
     <div class="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-4">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Mis pedidos</h1>
+                <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Mis pedidos</h1>
                 <p class="text-sm text-slate-600">Consulta el historial y estado de tus pedidos.</p>
             </div>
         </div>
@@ -23,10 +23,10 @@
                         <tr>
                             <td class="px-4 py-3 text-sm font-semibold text-slate-900">{{ $order->codigo }}</td>
                             <td class="px-4 py-3 text-sm text-slate-700">{{ $order->estado }}</td>
-                            <td class="px-4 py-3 text-sm font-semibold text-rose-900">${{ number_format($order->total, 2) }}</td>
+                            <td class="px-4 py-3 text-sm font-semibold text-primary">${{ number_format($order->total, 2) }}</td>
                             <td class="px-4 py-3 text-sm text-slate-600">{{ $order->created_at?->format('d/m/Y H:i') }}</td>
                             <td class="px-4 py-3 text-sm text-right">
-                                <a href="{{ route('panel.orders.show', $order) }}" class="text-rose-900 hover:underline">Ver detalle</a>
+                                <a href="{{ route('panel.orders.show', $order) }}" class="text-primary hover:underline">Ver detalle</a>
                             </td>
                         </tr>
                     @empty

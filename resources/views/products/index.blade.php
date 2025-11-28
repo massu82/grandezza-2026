@@ -1,14 +1,17 @@
 <x-layout-public title="Vinos | Grandezza">
+    <section class="w-full bg-slate-900 text-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <h1 class="text-3xl font-semibold text-white" style="font-family: 'Playfair Display', serif;">Vinos</h1>
+            @if(isset($products) && $products->count())
+                <p class="text-sm text-slate-200 mt-1">Mostrando {{ $products->firstItem() }}–{{ $products->lastItem() }} de {{ $products->total() }} vinos</p>
+            @else
+                <p class="text-sm text-slate-200 mt-1">Explora nuestra selección.</p>
+            @endif
+        </div>
+    </section>
+
     <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <div>
-                <h1 class="text-3xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Vinos</h1>
-                @if(isset($products) && $products->count())
-                    <p class="text-sm text-slate-600 mt-1">Mostrando {{ $products->firstItem() }}–{{ $products->lastItem() }} de {{ $products->total() }} vinos</p>
-                @else
-                    <p class="text-sm text-slate-600 mt-1">Explora nuestra selección.</p>
-                @endif
-            </div>
             <form method="GET" class="w-full md:w-auto">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <x-form-select name="tipo" :options="$tipos ?? []" placeholder="Tipo" />
@@ -22,7 +25,7 @@
             </form>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-stretch">
             @forelse($products ?? [] as $product)
                 <x-product-card :product="$product" />
             @empty

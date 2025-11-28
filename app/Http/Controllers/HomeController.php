@@ -27,6 +27,14 @@ class HomeController extends Controller
             ->take(16)
             ->get();
 
+        $promoProducts = Product::query()
+            ->where('estado', 1)
+            ->whereNotNull('precio_promocion')
+            ->with('category')
+            ->orderByDesc('updated_at')
+            ->take(16)
+            ->get();
+
         $featuredCategories = Category::query()
             ->orderBy('nombre')
             ->take(5)
@@ -35,6 +43,7 @@ class HomeController extends Controller
         return view('home', [
             'promotions' => $promotions,
             'featuredProducts' => $featuredProducts,
+            'promoProducts' => $promoProducts,
             'featuredCategories' => $featuredCategories,
         ]);
     }

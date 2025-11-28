@@ -11,8 +11,13 @@
         <loc>{{ url('/categorias') }}</loc>
     </url>
     @foreach($products as $product)
+        @php
+            $productUrl = ($product->category->slug ?? false)
+                ? route('products.show', ['categoria' => $product->category->slug, 'slug' => $product->slug])
+                : route('products.show', ['categoria' => 'vinos', 'slug' => $product->slug]);
+        @endphp
         <url>
-            <loc>{{ url('/vinos/'.$product->slug) }}</loc>
+            <loc>{{ $productUrl }}</loc>
             <lastmod>{{ optional($product->updated_at)->toAtomString() }}</lastmod>
         </url>
     @endforeach

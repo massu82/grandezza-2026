@@ -1,6 +1,6 @@
 <x-layout-admin title="Ajustes">
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-4">
-        <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Ajustes generales</h1>
+        <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Ajustes generales</h1>
         <form method="POST" action="{{ url('/admin/settings') }}" class="space-y-4">
             @csrf
             @method('PUT')

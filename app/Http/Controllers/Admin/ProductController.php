@@ -108,7 +108,8 @@ class ProductController extends Controller
     {
         return [
             'nombre' => $request->nombre,
-            'slug' => $request->slug,
+            'presentation' => $request->presentation,
+            'slug' => Product::generateSlug($request->nombre, $request->presentation),
             'descripcion_corta' => $request->descripcion_corta,
             'descripcion_larga' => $request->descripcion_larga,
             'precio' => $request->precio,

@@ -2,7 +2,7 @@
     <div class="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-4">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Pedido {{ $order->codigo }}</h1>
+                <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Pedido {{ $order->codigo }}</h1>
                 <p class="text-sm text-slate-600">Estado: {{ $order->estado }} | Total: ${{ number_format($order->total, 2) }}</p>
             </div>
         </div>
@@ -23,7 +23,7 @@
                                 <div class="font-semibold text-slate-900">{{ $item->nombre_producto }}</div>
                                 <div class="text-xs text-slate-500">Cant: {{ $item->cantidad }}</div>
                             </div>
-                            <div class="text-sm font-semibold text-rose-900">${{ number_format($item->subtotal, 2) }}</div>
+                            <div class="text-sm font-semibold text-primary">${{ number_format($item->subtotal, 2) }}</div>
                         </div>
                     @endforeach
                 </div>

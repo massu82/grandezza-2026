@@ -1,7 +1,7 @@
 <x-layout-admin title="Categorías">
     <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Categorías</h1>
-        <a href="{{ url('/admin/categories/create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-rose-900 text-white text-sm font-semibold hover:bg-rose-800">Nueva categoría</a>
+        <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Categorías</h1>
+        <a href="{{ url('/admin/categories/create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-secondary">Nueva categoría</a>
     </div>
 
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">

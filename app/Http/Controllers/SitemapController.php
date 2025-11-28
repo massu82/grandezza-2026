@@ -11,7 +11,9 @@ class SitemapController extends Controller
 {
     public function index()
     {
-        $products = Product::select('slug', 'updated_at')->get();
+        $products = Product::select('id', 'slug', 'categoria_id', 'updated_at')
+            ->with('category:id,slug')
+            ->get();
         $categories = Category::select('slug', 'updated_at')->get();
         $pages = Page::select('slug', 'updated_at')->where('publicado', true)->get();
 

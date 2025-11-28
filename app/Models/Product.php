@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -13,6 +14,7 @@ class Product extends Model
 
     protected $fillable = [
         'nombre',
+        'presentation',
         'slug',
         'descripcion_corta',
         'descripcion_larga',
@@ -59,5 +61,10 @@ class Product extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public static function generateSlug(string $nombre, string $presentation): string
+    {
+        return Str::slug($nombre.'-'.$presentation);
     }
 }

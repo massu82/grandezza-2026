@@ -1,6 +1,6 @@
 <x-layout-admin title="Pedidos">
     <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Pedidos</h1>
+        <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Pedidos</h1>
     </div>
 
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 mb-4">
@@ -35,10 +35,10 @@
                         <td class="px-4 py-3 text-sm">
                             <span class="px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-700">{{ $order->estado }}</span>
                         </td>
-                        <td class="px-4 py-3 text-sm font-semibold text-rose-900">${{ number_format($order->total, 2) }}</td>
+                        <td class="px-4 py-3 text-sm font-semibold text-primary">${{ number_format($order->total, 2) }}</td>
                         <td class="px-4 py-3 text-sm text-slate-600">{{ $order->created_at?->format('d/m/Y H:i') }}</td>
                         <td class="px-4 py-3 text-sm text-right">
-                            <a href="{{ url('/admin/orders/'.$order->id) }}" class="text-rose-900 hover:underline">Ver</a>
+                            <a href="{{ url('/admin/orders/'.$order->id) }}" class="text-primary hover:underline">Ver</a>
                         </td>
                     </tr>
                 @empty

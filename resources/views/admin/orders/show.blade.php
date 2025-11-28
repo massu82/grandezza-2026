@@ -2,7 +2,7 @@
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-4">
         <div class="flex items-start justify-between">
             <div>
-                <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Pedido {{ $order->codigo }}</h1>
+                <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Pedido {{ $order->codigo }}</h1>
                 <p class="text-sm text-slate-600">Cliente: {{ $order->nombre_cliente }} | {{ $order->email_cliente }}</p>
             </div>
             <form method="POST" action="{{ url('/admin/orders/'.$order->id) }}" class="flex items-center gap-2">
@@ -23,7 +23,7 @@
                                 <div class="text-sm font-semibold text-slate-900">{{ $item->nombre_producto }}</div>
                                 <div class="text-xs text-slate-500">Cant: {{ $item->cantidad }}</div>
                             </div>
-                            <div class="text-sm font-semibold text-rose-900">${{ number_format($item->subtotal, 2) }}</div>
+                            <div class="text-sm font-semibold text-primary">${{ number_format($item->subtotal, 2) }}</div>
                         </div>
                     @endforeach
                 </div>
@@ -32,7 +32,7 @@
                 <div class="p-4 border border-slate-200 rounded-lg bg-slate-50">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-slate-600">Total</span>
-                        <span class="text-xl font-semibold text-rose-900">${{ number_format($order->total, 2) }}</span>
+                        <span class="text-xl font-semibold text-primary">${{ number_format($order->total, 2) }}</span>
                     </div>
                     <div class="mt-2 text-xs text-slate-500">Método: {{ $order->metodo_entrega }}</div>
                 </div>

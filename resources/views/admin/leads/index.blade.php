@@ -1,6 +1,6 @@
 <x-layout-admin title="Leads">
     <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">Leads</h1>
+        <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Leads</h1>
         <form method="GET" class="flex items-center gap-2">
             <x-form-input name="q" placeholder="Buscar nombre o email" />
             <x-button-primary type="submit">Buscar</x-button-primary>
@@ -28,7 +28,7 @@
                         <td class="px-4 py-3 text-sm text-slate-700">{{ $lead->origen }}</td>
                         <td class="px-4 py-3 text-sm text-slate-600">{{ $lead->created_at?->format('d/m/Y H:i') }}</td>
                         <td class="px-4 py-3 text-sm text-right space-x-2">
-                            <a href="{{ url('/admin/leads/'.$lead->id) }}" class="text-rose-900 hover:underline">Ver</a>
+                            <a href="{{ url('/admin/leads/'.$lead->id) }}" class="text-primary hover:underline">Ver</a>
                         </td>
                     </tr>
                 @empty

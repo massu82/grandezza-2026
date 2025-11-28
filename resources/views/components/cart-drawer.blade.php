@@ -21,10 +21,10 @@
          x-data="cartDrawerComponent(@js($items), @js($total), '{{ csrf_token() }}')" x-init="registerInstance()">
         <div class="px-4 py-4 border-b border-slate-200 flex items-center justify-between">
             <div>
-                <p class="text-xs uppercase tracking-[0.2em] text-rose-700">Carrito</p>
+                <p class="text-xs uppercase tracking-[0.2em] text-secondary">Carrito</p>
                 <h3 class="text-lg font-semibold text-slate-900">Tus vinos</h3>
             </div>
-            <button @click="cartOpen = false" class="text-slate-500 hover:text-rose-900">
+            <button @click="cartOpen = false" class="text-slate-500 hover:text-primary">
                 ✕
             </button>
         </div>
@@ -38,11 +38,11 @@
                     <div class="flex-1">
                         <div class="text-sm font-semibold text-slate-900" x-text="item.nombre"></div>
                         <div class="text-xs text-slate-500" x-text="item.categoria"></div>
-                        <div class="text-sm text-rose-900 font-semibold" x-text="formatCurrency(item.subtotal)"></div>
+                        <div class="text-sm text-primary font-semibold" x-text="formatCurrency(item.subtotal)"></div>
                         <div class="mt-2 flex items-center gap-2 text-xs">
                             <input type="number" min="1" class="w-16 rounded-md border-slate-300 text-sm text-center" x-model.number="item.quantity" @change="updateItem(item)">
-                            <button class="px-3 py-1 rounded-md bg-black text-white text-xs font-semibold hover:bg-rose-900" type="button" @click="updateItem(item)">Actualizar</button>
-                            <button class="text-xs text-rose-900 hover:underline" type="button" @click="removeItem(item)">Eliminar</button>
+                            <button class="px-3 py-1 rounded-md bg-black text-white text-xs font-semibold hover:bg-primary" type="button" @click="updateItem(item)">Actualizar</button>
+                            <button class="text-xs text-primary hover:underline" type="button" @click="removeItem(item)">Eliminar</button>
                         </div>
                     </div>
                 </div>
@@ -51,11 +51,11 @@
         <div class="p-4 border-t border-slate-200 space-y-3">
             <div class="flex items-center justify-between text-sm">
                 <span class="text-slate-600">Total</span>
-                <span class="text-xl font-semibold text-rose-900" x-text="formatCurrency(total)"></span>
+                <span class="text-xl font-semibold text-primary" x-text="formatCurrency(total)"></span>
             </div>
             <div class="flex gap-3">
-                <a href="{{ url('/carrito') }}" class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 text-sm font-semibold text-slate-900 hover:border-rose-900 hover:text-rose-900">Ver carrito</a>
-                <a href="{{ url('/checkout') }}" class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-rose-900">Checkout</a>
+                <a href="{{ url('/carrito') }}" class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 text-sm font-semibold text-slate-900 hover:border-primary hover:text-primary">Ver carrito</a>
+                <a href="{{ url('/checkout') }}" class="flex-1 btn-primary justify-center">Checkout</a>
             </div>
         </div>
     </div>
@@ -138,6 +138,7 @@
             document.addEventListener('DOMContentLoaded', () => {
                 const handler = async (form) => {
                     const btn = form.querySelector('button[type="submit"]');
+                    const card = form.closest('.group');
                     btn?.setAttribute('disabled', 'disabled');
                     try {
                         const response = await fetch(form.action, {
@@ -152,6 +153,10 @@
                         const data = await response.json();
                         if (window.cartDrawerController) {
                             window.cartDrawerController.update(data[0], data[1]);
+                        }
+                        if (card) {
+                            card.classList.add('animate-pulse');
+                            setTimeout(() => card.classList.remove('animate-pulse'), 400);
                         }
                     } catch (e) {
                         form.submit(); // fallback full submit

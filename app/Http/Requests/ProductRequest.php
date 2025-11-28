@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
@@ -15,7 +17,13 @@ class ProductRequest extends FormRequest
     {
         return [
             'nombre' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255'],
+            'presentation' => ['required', 'string', 'max:255'],
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('products', 'slug')->ignore($this->route('product')),
+            ],
             'descripcion_corta' => ['nullable', 'string'],
             'descripcion_larga' => ['nullable', 'string'],
             'precio' => ['required', 'numeric', 'min:0'],
@@ -36,5 +44,14 @@ class ProductRequest extends FormRequest
             'galeria.*' => ['image', 'mimes:jpeg,png,webp', 'max:1024'],
             'destacado' => ['boolean'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->filled('nombre') && $this->filled('presentation')) {
+            $this->merge([
+                'slug' => Product::generateSlug($this->nombre, $this->presentation),
+            ]);
+        }
     }
 }

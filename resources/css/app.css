@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,19 +6,19 @@
 
 @layer components {
     .btn-primary {
-        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-rose-900 focus:outline-none focus:ring-2 focus:ring-rose-500 transition;
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-white text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-light bg-primary hover:bg-secondary;
     }
 
     .input-control {
-        @apply w-full rounded-lg border border-slate-800/40 focus:border-slate-900 focus:ring-2 focus:ring-rose-600 text-sm bg-white text-slate-900 placeholder-slate-500;
+        @apply w-full rounded-lg border border-primary/20 focus:border-primary focus:ring-2 focus:ring-accent text-sm bg-white text-dark placeholder-slate-500;
     }
 
     .select-control {
-        @apply w-full rounded-lg border border-slate-800/40 focus:border-slate-900 focus:ring-2 focus:ring-rose-600 text-sm bg-white text-slate-900;
+        @apply w-full rounded-lg border border-primary/20 focus:border-primary focus:ring-2 focus:ring-accent text-sm bg-white text-dark;
     }
 
     .textarea-control {
-        @apply w-full rounded-lg border border-slate-800/40 focus:border-slate-900 focus:ring-2 focus:ring-rose-600 text-sm bg-white text-slate-900 placeholder-slate-500;
+        @apply w-full rounded-lg border border-primary/20 focus:border-primary focus:ring-2 focus:ring-accent text-sm bg-white text-dark placeholder-slate-500;
     }
 
     .section-container {
@@ -28,9 +28,16 @@
 
 @layer base {
     body {
-        @apply font-body;
+        @apply font-body text-[#1E1B1A] bg-white;
     }
     h1, h2, h3, h4, h5, h6 {
-        @apply font-heading;
+        @apply font-heading text-primary;
+    }
+    * {
+        border-radius: 0 !important;
+    }
+    .swiper-pagination-bullet,
+    .swiper-pagination-bullet-active {
+        border-radius: 9999px !important;
     }
 }

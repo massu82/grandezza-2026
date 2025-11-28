@@ -11,10 +11,17 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                primary: '#3B1E1F', // vino profundo más neutro
+                secondary: '#231617', // contraste oscuro
+                dark: '#0B0909',
+                light: '#FFFFFF', // blanco
+                accent: '#B8A06A', // dorado atenuado
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-                heading: ['"Playfair Display"', 'serif'],
-                body: ['Montserrat', 'sans-serif'],
+                sans: ['"Manrope"', ...defaultTheme.fontFamily.sans],
+                heading: ['"Cormorant Garamond"', 'serif'],
+                body: ['"Manrope"', 'sans-serif'],
             },
         },
     },

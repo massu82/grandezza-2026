@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/vinos', [ProductController::class, 'index']);
-Route::get('/vinos/{slug}', [ProductController::class, 'show']);
+Route::get('/vinos/{categoria}/{slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/categorias', [CategoryController::class, 'index']);
 Route::get('/categorias/{slug}', [CategoryController::class, 'show']);
 Route::get('/promociones', [PromotionPublicController::class, 'index']);

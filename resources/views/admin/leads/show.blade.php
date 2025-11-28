@@ -2,7 +2,7 @@
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-3">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">{{ $lead->nombre }}</h1>
+                <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">{{ $lead->nombre }}</h1>
                 <p class="text-sm text-slate-600">{{ $lead->email }}</p>
             </div>
             <form method="POST" action="{{ url('/admin/leads/'.$lead->id) }}">

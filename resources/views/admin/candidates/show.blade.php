@@ -2,7 +2,7 @@
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-3">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-semibold text-rose-950" style="font-family: 'Playfair Display', serif;">{{ $candidate->nombre }}</h1>
+                <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">{{ $candidate->nombre }}</h1>
                 <p class="text-sm text-slate-600">{{ $candidate->email }}</p>
             </div>
             <form method="POST" action="{{ url('/admin/candidates/'.$candidate->id) }}">
@@ -17,7 +17,7 @@
             <div><span class="text-slate-500">Fecha:</span> {{ $candidate->created_at?->format('d/m/Y H:i') }}</div>
             <div><span class="text-slate-500">CV:</span>
                 @if($candidate->cv_path)
-                    <a href="{{ Storage::url($candidate->cv_path) }}" class="text-rose-900 hover:underline" target="_blank">Ver CV</a>
+                    <a href="{{ Storage::url($candidate->cv_path) }}" class="text-primary hover:underline" target="_blank">Ver CV</a>
                 @else
                     —
                 @endif

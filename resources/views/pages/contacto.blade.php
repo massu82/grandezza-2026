@@ -1,9 +1,14 @@
 <x-layout-public title="Contacto | Grandezza">
+    <section class="w-full bg-slate-900 text-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <h1 class="text-3xl font-semibold text-white mb-2" style="font-family: 'Playfair Display', serif;">Hablemos</h1>
+            <p class="text-sm text-slate-200">Cuéntanos qué buscas y nuestro equipo te ayudará.</p>
+        </div>
+    </section>
     <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+        <p class="text-sm text-slate-600">Envíanos un mensaje y nuestro equipo te ayudará a elegir el vino perfecto.</p>
         <div class="grid md:grid-cols-3 gap-8">
             <div class="md:col-span-2 bg-white border border-slate-200 rounded-xl shadow-sm p-6">
-                <h1 class="text-3xl font-semibold text-rose-950 mb-2" style="font-family: 'Playfair Display', serif;">Hablemos</h1>
-                <p class="text-sm text-slate-600 mb-4">Envíanos un mensaje y nuestro equipo te ayudará a elegir el vino perfecto.</p>
                 <form method="POST" action="{{ url('/contacto') }}" class="space-y-4">
                     @csrf
                     <div class="grid md:grid-cols-2 gap-4">
@@ -19,7 +24,7 @@
                 </form>
 
                 <div class="mt-8 border-t border-slate-200 pt-6">
-                    <h2 class="text-xl font-semibold text-rose-950 mb-2" style="font-family: 'Playfair Display', serif;">Pedidos Dock / Empresas / Proveedores</h2>
+                    <h2 class="text-xl font-semibold text-primary mb-2" style="font-family: 'Playfair Display', serif;">Pedidos Dock / Empresas / Proveedores</h2>
                     <p class="text-sm text-slate-600 mb-4">Si necesitas surtir eventos, compras corporativas o eres proveedor, comparte tus datos y nos pondremos en contacto.</p>
                     <form method="POST" action="{{ url('/contacto') }}" class="space-y-3">
                         @csrf
@@ -37,7 +42,7 @@
             </div>
             <div class="space-y-4">
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
-                    <h2 class="text-lg font-semibold text-rose-950 mb-2" style="font-family: 'Playfair Display', serif;">Visítanos</h2>
+                    <h2 class="text-lg font-semibold text-primary mb-2" style="font-family: 'Playfair Display', serif;">Visítanos</h2>
                     <p class="text-sm text-slate-700">Av. Vino 123, CDMX</p>
                     <p class="text-sm text-slate-700">Tel: (55) 1234 5678</p>
                     <p class="text-sm text-slate-700 mb-2">Email: hola@grandezza.mx</p>

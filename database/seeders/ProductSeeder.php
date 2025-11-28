@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
@@ -24,6 +23,7 @@ class ProductSeeder extends Seeder
         $countries = ['Argentina', 'Chile', 'España', 'Francia', 'Italia', 'México', 'Estados Unidos', 'Australia'];
         $regions = ['Mendoza', 'Valle de Colchagua', 'Rioja', 'Bordeaux', 'Toscana', 'Valle de Guadalupe', 'Napa', 'Barossa'];
         $types = ['tinto', 'blanco', 'rosado', 'espumoso'];
+        $presentations = ['375 ml', '500 ml', '750 ml', '1 L', '1.5 L'];
         $images = [
             'https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=900&q=80',
             'https://images.unsplash.com/photo-1514369118554-e20d93546b30?auto=format&fit=crop&w=900&q=80',
@@ -37,7 +37,8 @@ class ProductSeeder extends Seeder
             $variety = Arr::random($varieties);
             $adj = Arr::random($adjectives);
             $name = "{$adj} {$variety}";
-            $slug = Str::slug($name.'-'.$i);
+            $presentation = Arr::random($presentations);
+            $slug = Product::generateSlug($name, $presentation);
             $category = $categories->random();
             $price = $faker->numberBetween(300, 2500);
             $promo = $faker->boolean(30);
@@ -47,6 +48,7 @@ class ProductSeeder extends Seeder
                 ['slug' => $slug],
                 [
                     'nombre' => $name,
+                    'presentation' => $presentation,
                     'descripcion_corta' => 'Vino '.$variety.' con notas elegantes y final persistente.',
                     'descripcion_larga' => 'Notas de cata: frutas maduras, especias suaves y taninos redondos. Ideal para maridar con carnes, pastas y quesos curados.',
                     'precio' => $price,

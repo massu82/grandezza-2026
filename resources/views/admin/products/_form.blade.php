@@ -1,7 +1,7 @@
 @csrf
 <div class="grid md:grid-cols-2 gap-4">
     <x-form-input name="nombre" label="Nombre" :value="$product->nombre ?? ''" required />
-    <x-form-input name="slug" label="Slug" :value="$product->slug ?? ''" required />
+    <x-form-input name="presentation" label="Presentación" :value="$product->presentation ?? ''" placeholder="750 ml, 1 L, 375 ml" required />
     <x-form-select name="categoria_id" label="Categoría" :options="$categorias ?? []" :value="$product->categoria_id ?? null" placeholder="Selecciona" required />
     <x-form-input name="tipo" label="Tipo" :value="$product->tipo ?? ''" required />
     <x-form-input name="pais" label="País" :value="$product->pais ?? ''" />
@@ -17,14 +17,14 @@
     <x-form-select name="destacado" label="Destacado" :options="[1 => 'Sí', 0 => 'No']" :value="$product->destacado ?? 0" />
     <div class="space-y-2">
         <label class="block text-sm font-medium text-slate-700">Imagen principal</label>
-        <input type="file" name="imagen_principal" accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-slate-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-black file:text-white hover:file:bg-rose-900 border border-slate-300 rounded-lg focus:border-rose-700 focus:ring-rose-700">
+        <input type="file" name="imagen_principal" accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-slate-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-white hover:file:bg-secondary border border-slate-300 rounded-lg focus:border-primary focus:ring-accent">
         @if(!empty($product->imagen_principal))
             <p class="text-xs text-slate-500">Actual: {{ $product->imagen_principal }}</p>
         @endif
     </div>
     <div class="space-y-2">
         <label class="block text-sm font-medium text-slate-700">Galería</label>
-        <input type="file" name="galeria[]" multiple accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-slate-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-black file:text-white hover:file:bg-rose-900 border border-slate-300 rounded-lg focus:border-rose-700 focus:ring-rose-700">
+        <input type="file" name="galeria[]" multiple accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-slate-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-white hover:file:bg-secondary border border-slate-300 rounded-lg focus:border-primary focus:ring-accent">
         @if(!empty($product->galeria))
             <p class="text-xs text-slate-500">Actual: {{ is_array($product->galeria) ? implode(', ', $product->galeria) : $product->galeria }}</p>
         @endif

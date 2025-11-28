@@ -45,9 +45,15 @@ class ProductController extends Controller
         ]);
     }
 
-    public function show(string $slug)
+    public function show(string $categoria, string $slug)
     {
-        $product = Product::query()->where('slug', $slug)->with('category')->firstOrFail();
+        $product = Product::query()
+            ->where('slug', $slug)
+            ->whereHas('category', function ($query) use ($categoria) {
+                $query->where('slug', $categoria);
+            })
+            ->with('category')
+            ->firstOrFail();
 
         $related = Product::query()
             ->where('estado', 1)

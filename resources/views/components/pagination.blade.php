@@ -6,11 +6,11 @@
             @if ($paginator->onFirstPage())
                 <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-slate-400 bg-white border border-slate-200 cursor-default rounded-md">Anterior</span>
             @else
-                <a href="{{ $paginator->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-rose-900 bg-white border border-slate-200 rounded-md hover:bg-rose-50">Anterior</a>
+                <a href="{{ $paginator->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-primary bg-white border border-slate-200 rounded-md hover:bg-light">Anterior</a>
             @endif
 
             @if ($paginator->hasMorePages())
-                <a href="{{ $paginator->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium text-rose-900 bg-white border border-slate-200 rounded-md hover:bg-rose-50">Siguiente</a>
+                <a href="{{ $paginator->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium text-primary bg-white border border-slate-200 rounded-md hover:bg-light">Siguiente</a>
             @else
                 <span class="ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium text-slate-400 bg-white border border-slate-200 cursor-default rounded-md">Siguiente</span>
             @endif
@@ -42,7 +42,7 @@
                             ‹
                         </span>
                     @else
-                        <a href="{{ $paginator->previousPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-rose-900 bg-white border border-slate-200 hover:bg-rose-50 rounded-l-md">
+                        <a href="{{ $paginator->previousPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-primary bg-white border border-slate-200 hover:bg-light rounded-l-md">
                             <span class="sr-only">Anterior</span>
                             ‹
                         </a>
@@ -52,9 +52,9 @@
                         @php $totalPages = $paginator->lastPage(); @endphp
                         @for ($page = 1; $page <= $totalPages; $page++)
                             @if ($page == $paginator->currentPage())
-                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-rose-900 border border-rose-900">{{ $page }}</span>
+                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary border border-secondary">{{ $page }}</span>
                             @else
-                                <a href="{{ $paginator->url($page) }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-rose-900 bg-white border border-slate-200 hover:bg-rose-50 focus:z-10">
+                                <a href="{{ $paginator->url($page) }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-primary bg-white border border-slate-200 hover:bg-light focus:z-10">
                                     {{ $page }}
                                 </a>
                             @endif
@@ -66,7 +66,7 @@
                     @endif
 
                     @if ($paginator->hasMorePages())
-                        <a href="{{ $paginator->nextPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-rose-900 bg-white border border-slate-200 hover:bg-rose-50 rounded-r-md">
+                        <a href="{{ $paginator->nextPageUrl() }}" class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-primary bg-white border border-slate-200 hover:bg-light rounded-r-md">
                             <span class="sr-only">Siguiente</span>
                             ›
                         </a>

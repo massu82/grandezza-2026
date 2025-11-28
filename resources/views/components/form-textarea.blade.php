@@ -2,7 +2,7 @@
 
 <div class="space-y-2">
     @if($label)
-        <label for="{{ $name }}" class="block text-sm font-medium text-slate-700">{{ $label }} @if($required)<span class="text-rose-700">*</span>@endif</label>
+        <label for="{{ $name }}" class="block text-sm font-medium text-slate-700">{{ $label }} @if($required)<span class="text-secondary">*</span>@endif</label>
     @endif
     <textarea
         id="{{ $name }}"
@@ -13,6 +13,6 @@
         {{ $attributes->merge(['class' => 'textarea-control']) }}
     >{{ old($name, $value) }}</textarea>
     @error($name)
-        <p class="text-xs text-rose-700">{{ $message }}</p>
+        <p class="text-xs text-secondary">{{ $message }}</p>
     @enderror
 </div>

@@ -16,21 +16,18 @@
     <div x-data="{ open: false }" class="min-h-screen flex">
         <aside class="bg-white shadow-md w-64 border-r border-slate-200 hidden md:flex flex-col">
             <div class="h-16 flex items-center px-6 border-b border-slate-100">
-                <div>
-                    <div class="text-xl font-semibold text-rose-900" style="font-family: 'Playfair Display', serif;">Grandezza</div>
-                    <div class="text-xs uppercase tracking-wide text-slate-500">Panel</div>
-                </div>
+                <img src="{{ asset('img/logo-dark.webp') }}" alt="Grandezza" class="h-12 w-auto">
             </div>
             <nav class="flex-1 py-6 space-y-1 text-sm">
-                <a href="{{ url('/admin') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Dashboard</a>
-                <a href="{{ url('/admin/products') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Productos</a>
-                <a href="{{ url('/admin/categories') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Categorías</a>
-                <a href="{{ url('/admin/promotions') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Promociones</a>
-                <a href="{{ url('/admin/orders') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Pedidos</a>
-                <a href="{{ url('/admin/pages') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Páginas</a>
-                <a href="{{ url('/admin/leads') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Leads</a>
-                <a href="{{ url('/admin/candidates') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Candidatos</a>
-                <a href="{{ url('/admin/settings') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-rose-50 text-slate-700">Ajustes</a>
+                <a href="{{ url('/admin') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Dashboard</a>
+                <a href="{{ url('/admin/products') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Productos</a>
+                <a href="{{ url('/admin/categories') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Categorías</a>
+                <a href="{{ url('/admin/promotions') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Promociones</a>
+                <a href="{{ url('/admin/orders') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Pedidos</a>
+                <a href="{{ url('/admin/pages') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Páginas</a>
+                <a href="{{ url('/admin/leads') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Leads</a>
+                <a href="{{ url('/admin/candidates') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Candidatos</a>
+                <a href="{{ url('/admin/settings') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Ajustes</a>
             </nav>
             <div class="p-6 text-xs text-slate-400 border-t border-slate-100">Sesión: {{ auth()->user()->name ?? 'Admin' }}</div>
         </aside>
@@ -49,7 +46,7 @@
                     <div class="text-sm text-slate-600">{{ auth()->user()->email ?? 'admin@example.com' }}</div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="text-sm text-rose-900 hover:text-rose-700">Cerrar sesión</button>
+                        <button type="submit" class="text-sm text-primary hover:text-secondary">Cerrar sesión</button>
                     </form>
                 </div>
             </header>
@@ -57,15 +54,15 @@
             <div class="md:hidden" x-show="open" x-transition>
                 <div class="bg-white border-b border-slate-200 shadow-sm">
                     <nav class="py-2 space-y-1 text-sm">
-                        <a href="{{ url('/admin') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Dashboard</a>
-                        <a href="{{ url('/admin/products') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Productos</a>
-                        <a href="{{ url('/admin/categories') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Categorías</a>
-                        <a href="{{ url('/admin/promotions') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Promociones</a>
-                        <a href="{{ url('/admin/orders') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Pedidos</a>
-                        <a href="{{ url('/admin/pages') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Páginas</a>
-                        <a href="{{ url('/admin/leads') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Leads</a>
-                        <a href="{{ url('/admin/candidates') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Candidatos</a>
-                        <a href="{{ url('/admin/settings') }}" class="block px-4 py-2 hover:bg-rose-50 text-slate-700">Ajustes</a>
+                        <a href="{{ url('/admin') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Dashboard</a>
+                        <a href="{{ url('/admin/products') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Productos</a>
+                        <a href="{{ url('/admin/categories') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Categorías</a>
+                        <a href="{{ url('/admin/promotions') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Promociones</a>
+                        <a href="{{ url('/admin/orders') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Pedidos</a>
+                        <a href="{{ url('/admin/pages') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Páginas</a>
+                        <a href="{{ url('/admin/leads') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Leads</a>
+                        <a href="{{ url('/admin/candidates') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Candidatos</a>
+                        <a href="{{ url('/admin/settings') }}" class="block px-4 py-2 hover:bg-light text-slate-700">Ajustes</a>
                     </nav>
                 </div>
             </div>

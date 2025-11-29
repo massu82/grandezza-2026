@@ -14,20 +14,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <style>
-        .swiper-pagination-bullet {
-            background: #C6A664;
-            opacity: 1;
-        }
-        .swiper-pagination-bullet-active {
-            background: #C6A664;
-        }
-        .swiper-button-next,
-        .swiper-button-prev {
-            color: #C6A664;
-        }
-    </style>
-
     @stack('styles')
 
     <!-- Google Analytics 4 -->

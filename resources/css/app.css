@@ -24,6 +24,18 @@
     .section-container {
         @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
     }
+
+    .swiper-pagination-bullet {
+        background: #C6A664;
+        opacity: 1;
+    }
+    .swiper-pagination-bullet-active {
+        background: #C6A664;
+    }
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: #C6A664;
+    }
 }
 
 @layer base {

@@ -1,11 +1,11 @@
 <x-layout-public title="Vinos | Grandezza">
-    <section class="w-full bg-slate-900 text-white">
+    <section class="w-full bg-gradient-to-b from-zinc-900 via-zinc-950 to-zinc-900 text-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <h1 class="text-3xl font-semibold text-white" style="font-family: 'Playfair Display', serif;">Vinos</h1>
             @if(isset($products) && $products->count())
-                <p class="text-sm text-slate-200 mt-1">Mostrando {{ $products->firstItem() }}–{{ $products->lastItem() }} de {{ $products->total() }} vinos</p>
+                <p class="text-sm text-zinc-200 mt-1">Mostrando {{ $products->firstItem() }}–{{ $products->lastItem() }} de {{ $products->total() }} vinos</p>
             @else
-                <p class="text-sm text-slate-200 mt-1">Explora nuestra selección.</p>
+                <p class="text-sm text-zinc-200 mt-1">Explora nuestra selección.</p>
             @endif
         </div>
     </section>
@@ -29,7 +29,7 @@
             @forelse($products ?? [] as $product)
                 <x-product-card :product="$product" />
             @empty
-                <p class="col-span-full text-slate-500 text-sm">No encontramos vinos con los filtros seleccionados.</p>
+                <p class="col-span-full text-zinc-500 text-sm">No encontramos vinos con los filtros seleccionados.</p>
             @endforelse
         </div>
 

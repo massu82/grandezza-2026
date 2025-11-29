@@ -19,15 +19,33 @@
                 <img src="{{ asset('img/logo-dark.webp') }}" alt="Grandezza" class="h-12 w-auto">
             </div>
             <nav class="flex-1 py-6 space-y-1 text-sm">
-                <a href="{{ url('/admin') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Dashboard</a>
-                <a href="{{ url('/admin/products') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Productos</a>
-                <a href="{{ url('/admin/categories') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Categorías</a>
-                <a href="{{ url('/admin/promotions') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Promociones</a>
-                <a href="{{ url('/admin/orders') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Pedidos</a>
-                <a href="{{ url('/admin/pages') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Páginas</a>
-                <a href="{{ url('/admin/leads') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Leads</a>
-                <a href="{{ url('/admin/candidates') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Candidatos</a>
-                <a href="{{ url('/admin/settings') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">Ajustes</a>
+                <a href="{{ url('/admin') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-home class="w-5 h-5" /> Dashboard
+                </a>
+                <a href="{{ url('/admin/products') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-cube class="w-5 h-5" /> Productos
+                </a>
+                <a href="{{ url('/admin/categories') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-rectangle-stack class="w-5 h-5" /> Categorías
+                </a>
+                <a href="{{ url('/admin/promotions') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-sparkles class="w-5 h-5" /> Promociones
+                </a>
+                <a href="{{ url('/admin/orders') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-clipboard-document-list class="w-5 h-5" /> Pedidos
+                </a>
+                <a href="{{ url('/admin/pages') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-document-text class="w-5 h-5" /> Páginas
+                </a>
+                <a href="{{ url('/admin/leads') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-user-plus class="w-5 h-5" /> Leads
+                </a>
+                <a href="{{ url('/admin/candidates') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-users class="w-5 h-5" /> Candidatos
+                </a>
+                <a href="{{ url('/admin/settings') }}" class="px-6 py-2 flex items-center gap-2 hover:bg-light text-slate-700">
+                    <x-heroicon-o-cog-6-tooth class="w-5 h-5" /> Ajustes
+                </a>
             </nav>
             <div class="p-6 text-xs text-slate-400 border-t border-slate-100">Sesión: {{ auth()->user()->name ?? 'Admin' }}</div>
         </aside>
@@ -36,9 +54,7 @@
             <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6 shadow-sm">
                 <div class="flex items-center gap-3">
                     <button class="md:hidden p-2 rounded-md border border-slate-200 text-slate-600" @click="open = !open">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
+                        <x-heroicon-o-bars-3 class="w-5 h-5" />
                     </button>
                     <div class="text-sm text-slate-500">Panel de administración</div>
                 </div>

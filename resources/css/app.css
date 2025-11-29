@@ -6,7 +6,7 @@
 
 @layer components {
     .btn-primary {
-        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-white text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-light bg-primary hover:bg-secondary;
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-white text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-light bg-zinc-800 hover:bg-zinc-900;
     }
 
     .input-control {

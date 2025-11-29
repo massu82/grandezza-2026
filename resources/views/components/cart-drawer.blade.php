@@ -17,45 +17,53 @@
 
 <div x-cloak x-show="cartOpen" class="fixed inset-0 z-50 flex justify-end">
     <div class="absolute inset-0 bg-black/50" @click="cartOpen = false"></div>
-    <div class="relative bg-white w-full sm:w-[420px] max-w-md h-full shadow-2xl border-l border-slate-200 flex flex-col"
+    <div class="relative bg-white w-full sm:w-[420px] max-w-md h-full shadow-2xl border-l border-zinc-200 flex flex-col"
          x-data="cartDrawerComponent(@js($items), @js($total), '{{ csrf_token() }}')" x-init="registerInstance()">
-        <div class="px-4 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div class="px-4 py-4 border-b border-zinc-200 flex items-center justify-between">
             <div>
-                <p class="text-xs uppercase tracking-[0.2em] text-secondary">Carrito</p>
-                <h3 class="text-lg font-semibold text-slate-900">Tus vinos</h3>
+                <p class="text-xs uppercase tracking-[0.2em] text-accent">Carrito</p>
+                <h3 class="text-lg font-semibold text-zinc-900">Tus vinos</h3>
             </div>
-            <button @click="cartOpen = false" class="text-slate-500 hover:text-primary">
-                ✕
+            <button @click="cartOpen = false" class="text-zinc-500 hover:text-primary">
+                <x-heroicon-o-x-mark class="w-5 h-5" />
             </button>
         </div>
         <div class="flex-1 overflow-y-auto">
             <template x-if="items.length === 0">
-                <div class="px-4 py-6 text-sm text-slate-500">Tu carrito está vacío.</div>
+                <div class="px-4 py-6 text-sm text-zinc-500">Tu carrito está vacío.</div>
             </template>
             <template x-for="item in items" :key="item.product_id">
-                <div class="px-4 py-3 border-b border-slate-100 flex gap-3 items-center">
+                <div class="px-4 py-3 border-b border-zinc-100 flex gap-3 items-center">
                     <img :src="item.imagen" :alt="item.nombre" class="w-14 h-14 rounded-lg object-cover">
                     <div class="flex-1">
-                        <div class="text-sm font-semibold text-slate-900" x-text="item.nombre"></div>
-                        <div class="text-xs text-slate-500" x-text="item.categoria"></div>
-                        <div class="text-sm text-primary font-semibold" x-text="formatCurrency(item.subtotal)"></div>
+                        <div class="text-sm font-semibold text-zinc-900" x-text="item.nombre"></div>
+                        <div class="text-xs text-zinc-500" x-text="item.categoria"></div>
+                        <div class="text-sm text-accent font-semibold" x-text="formatCurrency(item.subtotal)"></div>
                         <div class="mt-2 flex items-center gap-2 text-xs">
-                            <input type="number" min="1" class="w-16 rounded-md border-slate-300 text-sm text-center" x-model.number="item.quantity" @change="updateItem(item)">
-                            <button class="px-3 py-1 rounded-md bg-black text-white text-xs font-semibold hover:bg-primary" type="button" @click="updateItem(item)">Actualizar</button>
-                            <button class="text-xs text-primary hover:underline" type="button" @click="removeItem(item)">Eliminar</button>
+                            <input type="number" min="1" class="w-16 rounded-md border-zinc-300 text-sm text-center" x-model.number="item.quantity" @change="updateItem(item)">
+                            <button class="px-3 py-1 rounded-md bg-black text-white text-xs font-semibold hover:bg-primary inline-flex items-center gap-1" type="button" @click="updateItem(item)">
+                                <x-heroicon-s-arrow-path class="w-4 h-4" /> Actualizar
+                            </button>
+                            <button class="text-xs text-primary hover:underline inline-flex items-center gap-1" type="button" @click="removeItem(item)">
+                                <x-heroicon-s-trash class="w-4 h-4" /> Eliminar
+                            </button>
                         </div>
                     </div>
                 </div>
             </template>
         </div>
-        <div class="p-4 border-t border-slate-200 space-y-3">
+        <div class="p-4 border-t border-zinc-200 space-y-3">
             <div class="flex items-center justify-between text-sm">
-                <span class="text-slate-600">Total</span>
-                <span class="text-xl font-semibold text-primary" x-text="formatCurrency(total)"></span>
+                <span class="text-zinc-600">Total</span>
+                <span class="text-xl font-semibold text-accent" x-text="formatCurrency(total)"></span>
             </div>
             <div class="flex gap-3">
-                <a href="{{ url('/carrito') }}" class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 text-sm font-semibold text-slate-900 hover:border-primary hover:text-primary">Ver carrito</a>
-                <a href="{{ url('/checkout') }}" class="flex-1 btn-primary justify-center">Checkout</a>
+                <a href="{{ url('/carrito') }}" class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-lg border border-zinc-300 text-sm font-semibold text-zinc-900 hover:border-primary hover:text-primary gap-2">
+                    <x-heroicon-o-eye class="w-4 h-4" /> Ver carrito
+                </a>
+                <a href="{{ url('/checkout') }}" class="flex-1 btn-primary justify-center gap-2 inline-flex items-center">
+                    <x-heroicon-s-credit-card class="w-4 h-4" /> Checkout
+                </a>
             </div>
         </div>
     </div>

@@ -96,22 +96,16 @@
                         </x-button-primary>
                     </form>
                     <button class="text-sm text-primary underline" data-gtm-event="view_item" data-gtm-product-id="{{ $product->id }}">Ver detalles</button>
-                    <div class="flex items-center gap-2 text-slate-600 text-sm ml-auto">
+                    <div class="flex items-center gap-2 text-zinc-600 text-sm ml-auto">
                         <span>Compartir:</span>
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener" aria-label="Compartir en Facebook" class="p-1 rounded hover:text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M13.5 9H16V6h-2.5a3.5 3.5 0 0 0-3.5 3.5V12H8v3h2v6h3v-6h2.1l.4-3H13V9.5c0-.3.2-.5.5-.5Z"/>
-                            </svg>
+                            <img src="{{ asset('icons/facebook.svg') }}" alt="Facebook" class="w-5 h-5">
                         </a>
                         <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($product->nombre) }}" target="_blank" rel="noopener" aria-label="Compartir en X" class="p-1 rounded hover:text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M5 4h3l4 5.5L16.5 4H19l-5.4 7.3L19 20h-3l-4.4-5.8L7.3 20H5l5.6-7.5L5 4Z"/>
-                            </svg>
+                            <img src="{{ asset('icons/icons-x.svg') }}" alt="X" class="w-5 h-5">
                         </a>
                         <a href="https://api.whatsapp.com/send?text={{ urlencode($product->nombre.' '.url()->current()) }}" target="_blank" rel="noopener" aria-label="Compartir en WhatsApp" class="p-1 rounded hover:text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M4.5 20.3 5.3 17a7.8 7.8 0 1 1 3 2.2l-3.8 1.1ZM9 8.5c-.1-.3-.3-.3-.5-.3h-.4c-.1 0-.3 0-.4.2-.1.2-.5.5-.5 1.2s.5 1.4.6 1.5c.1.2 1.1 1.8 2.7 2.4 1.3.5 1.5.4 1.8.4.3 0 .9-.3 1-0.7.1-.4.4-.7.4-.7.1-.1.1-.2 0-.3l-.5-.3c-.1-.1-.3-.1-.4 0-.2.1-.6.3-.7.3-.2 0-.3 0-.5-.2-.2-.2-.5-.7-.5-.7-.1-.1 0-.2 0-.3l.2-.3c.1-.1.1-.2.2-.3l.1-.2c.1-.1.1-.2 0-.3l-.4-.9c-.1-.2-.2-.2-.3-.2h-.3c-.1 0-.3 0-.4.1l-.3.2c-.2.2-.6.6-.6 1.2 0 .7.6 1.3.7 1.4Z"/>
-                            </svg>
+                            <img src="{{ asset('icons/whatsapp.svg') }}" alt="WhatsApp" class="w-5 h-5">
                         </a>
                     </div>
                 </div>

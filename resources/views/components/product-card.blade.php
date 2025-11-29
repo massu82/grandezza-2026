@@ -22,9 +22,9 @@
 
 @php
     $isFeatured = $product->destacado ?? false;
-    $cardBg = $isFeatured ? 'bg-slate-900 text-white border-slate-700' : 'bg-white text-slate-900 border-slate-100';
-    $tagBg = $isFeatured ? 'bg-accent text-slate-900' : 'bg-primary text-white';
-    $priceColor = $isFeatured ? 'text-white' : 'text-primary';
+    $cardBg = 'bg-white text-zinc-900 border-zinc-200';
+    $tagBg = 'bg-accent text-zinc-900';
+    $priceColor = 'text-zinc-900';
 @endphp
 
 <div class="group {{ $cardBg }} rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col h-full min-h-[420px]">
@@ -40,20 +40,26 @@
         </picture>
         <div class="absolute top-3 left-3 flex gap-2">
             @if($hasPromo)
-                <span class="text-xs px-2 py-1 {{ $tagBg }} rounded-full">Promoción</span>
+                <span class="flex items-center gap-1 text-xs text-accent">
+                    <x-heroicon-s-tag class="w-4 h-4" /> <span class="sr-only">Promoción</span>
+                </span>
             @endif
             @if($product->destacado ?? false)
-                <span class="text-xs px-2 py-1 bg-accent text-slate-900 rounded-full">Destacado</span>
+                <span class="flex items-center gap-1 text-xs text-accent">
+                    <x-heroicon-s-star class="w-4 h-4" /> <span class="sr-only">Destacado</span>
+                </span>
             @endif
             @if($product->created_at && $product->created_at->gt(now()->subDays(14)))
-                <span class="text-xs px-2 py-1 bg-emerald-600 text-white rounded-full">Nuevo</span>
+                <span class="flex items-center gap-1 text-xs text-zinc-700">
+                    <x-heroicon-s-sparkles class="w-4 h-4" /> <span class="sr-only">Nuevo</span>
+                </span>
             @endif
         </div>
     </div>
     <div class="p-4 flex-1 flex flex-col">
-        <div class="text-xs uppercase tracking-wide text-slate-500 mb-1">{{ $product->category->nombre ?? $product->tipo ?? 'Vino' }}</div>
+        <div class="text-xs uppercase tracking-wide text-zinc-500 mb-1">{{ $product->category->nombre ?? $product->tipo ?? 'Vino' }}</div>
         <h3
-            class="text-lg font-semibold {{ $isFeatured ? 'text-white group-hover:text-accent' : 'text-primary group-hover:text-secondary' }} transition leading-tight min-h-[52px] max-h-[52px] overflow-hidden"
+            class="text-lg font-semibold text-zinc-900 group-hover:text-zinc-700 transition leading-tight min-h-[52px] max-h-[52px] overflow-hidden"
             style="font-family: 'Playfair Display', serif; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"
         >
             <a href="{{ $productUrl }}">
@@ -61,7 +67,7 @@
             </a>
         </h3>
         <p
-            class="text-sm {{ $isFeatured ? 'text-slate-200' : 'text-slate-500' }} mt-1 flex-1 min-h-[66px] max-h-[66px] overflow-hidden"
+            class="text-sm text-zinc-500 mt-1 flex-1 min-h-[66px] max-h-[66px] overflow-hidden"
             style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;"
         >
             {{ \Illuminate\Support\Str::limit($product->descripcion_corta, 110) }}
@@ -70,7 +76,7 @@
             <div class="flex items-center gap-2">
                 @if($hasPromo)
                     <span class="text-lg font-semibold {{ $priceColor }}">${{ number_format($product->precio_promocion, 2) }}</span>
-                    <span class="text-sm {{ $isFeatured ? 'text-slate-400' : 'text-slate-400' }} line-through">${{ number_format($product->precio, 2) }}</span>
+                    <span class="text-sm {{ $isFeatured ? 'text-zinc-400' : 'text-zinc-400' }} line-through">${{ number_format($product->precio, 2) }}</span>
                 @else
                     <span class="text-lg font-semibold {{ $priceColor }}">${{ number_format($product->precio, 2) }}</span>
                 @endif
@@ -81,13 +87,16 @@
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="quantity" value="1">
             <button
-                class="w-full justify-center font-medium px-4 py-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 {{ $isFeatured ? 'bg-accent text-secondary hover:bg-white hover:text-secondary focus:ring-offset-dark' : 'bg-gradient-to-r from-primary via-secondary to-primary text-white hover:from-secondary hover:to-primary focus:ring-offset-light' }}"
+                class="w-full justify-center font-medium px-4 py-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:ring-offset-2 {{ $isFeatured ? 'bg-zinc-700 text-white hover:bg-zinc-600 focus:ring-offset-dark' : 'bg-gradient-to-r from-zinc-600 via-zinc-700 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-700 focus:ring-offset-light' }}"
                 data-gtm-event="add_to_cart"
                 data-gtm-product-id="{{ $product->id }}"
                 data-gtm-product-name="{{ $product->nombre }}"
                 data-meta-event="AddToCart"
             >
-                Agregar al carrito
+                <span class="inline-flex items-center justify-center gap-2">
+                    <x-heroicon-s-shopping-cart class="w-5 h-5" />
+                    Agregar al carrito
+                </span>
             </button>
         </form>
     </div>

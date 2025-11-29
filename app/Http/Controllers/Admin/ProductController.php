@@ -104,6 +104,44 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Producto eliminado.');
     }
 
+    public function inlineUpdate(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'presentation' => ['required', 'string', 'max:255'],
+            'precio' => ['required', 'numeric', 'min:0'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'estado' => ['required', 'integer', 'in:0,1'],
+        ]);
+
+        $product->update([
+            'presentation' => $validated['presentation'],
+            'precio' => $validated['precio'],
+            'stock' => $validated['stock'],
+            'estado' => $validated['estado'],
+            'slug' => Product::generateSlug($product->nombre, $validated['presentation']),
+        ]);
+
+        return response()->json([
+            'message' => 'Actualizado',
+            'presentation' => $product->presentation,
+            'precio' => $product->precio,
+            'stock' => $product->stock,
+            'estado' => $product->estado,
+        ]);
+    }
+
+    public function duplicate(Product $product)
+    {
+        $categorias = Category::pluck('nombre', 'id')->toArray();
+        $copy = $product->replicate(['slug', 'sku', 'created_at', 'updated_at', 'deleted_at']);
+        $copy->nombre = $product->nombre.' (copia)';
+
+        return view('admin.products.create', [
+            'categorias' => $categorias,
+            'product' => $copy,
+        ]);
+    }
+
     protected function mapData(ProductRequest $request): array
     {
         return [

@@ -25,6 +25,8 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
+        cache()->forget('app_settings');
+
         return redirect()->back()->with('success', 'Ajustes guardados.');
     }
 }

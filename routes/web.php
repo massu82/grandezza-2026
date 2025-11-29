@@ -58,6 +58,8 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::patch('products/{product}/inline', [AdminProductController::class, 'inlineUpdate'])->name('products.inline');
+    Route::get('products/{product}/duplicate', [AdminProductController::class, 'duplicate'])->name('products.duplicate');
     Route::resource('products', AdminProductController::class);
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('promotions', AdminPromotionController::class);

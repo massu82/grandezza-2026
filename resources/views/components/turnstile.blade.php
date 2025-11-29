@@ -1,4 +1,4 @@
-@props(['sitekey' => env('TURNSTILE_SITE_KEY', 'YOUR_TURNSTILE_SITE_KEY')])
+@props(['sitekey' => config('services.turnstile.sitekey') ?? env('TURNSTILE_SITE_KEY', 'YOUR_TURNSTILE_SITE_KEY')])
 
 <div class="cf-turnstile" data-sitekey="{{ $sitekey }}"></div>
 @once

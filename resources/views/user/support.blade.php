@@ -8,6 +8,7 @@
                 @csrf
                 <x-form-input name="asunto" label="Asunto" required />
                 <x-form-textarea name="mensaje" label="Mensaje" rows="5" required />
+                <x-turnstile />
                 <x-button-primary type="submit">Enviar a soporte</x-button-primary>
             </form>
         </div>

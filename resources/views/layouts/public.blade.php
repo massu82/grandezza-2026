@@ -7,7 +7,19 @@
     <link rel="icon" type="image/webp" href="{{ asset('img/favicon.webp') }}">
 
     <title>{{ $title ?? config('app.name', 'Vinatería') }}</title>
-    <meta name="description" content="{{ $metaDescription ?? '' }}">
+    <meta name="description" content="{{ $metaDescription ?? config('app.name').' | Vinatería boutique' }}">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta name="robots" content="{{ app()->environment('production') ? 'index,follow' : 'noindex,nofollow' }}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $title ?? config('app.name', 'Vinatería') }}">
+    <meta property="og:description" content="{{ $metaDescription ?? config('app.name').' | Vinatería boutique' }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('img/logo-dark.webp') }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title ?? config('app.name', 'Vinatería') }}">
+    <meta name="twitter:description" content="{{ $metaDescription ?? config('app.name').' | Vinatería boutique' }}">
+    <meta name="twitter:image" content="{{ asset('img/logo-dark.webp') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -25,6 +37,18 @@
             gtag('config', '{{ env('GA_MEASUREMENT_ID') }}');
         </script>
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('GA_MEASUREMENT_ID') }}"></script>
+    @endif
+
+    @if(app()->environment('production'))
+        <script type="application/ld+json">
+            {!! json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'Organization',
+                'name' => 'Grandezza',
+                'url' => url('/'),
+                'logo' => asset('img/logo-dark.webp'),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
     @endif
 
     <!-- Meta Pixel -->

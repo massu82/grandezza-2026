@@ -17,7 +17,7 @@
                 </ul>
             </div>
             <div class="bg-white border border-zinc-200 rounded-xl shadow-sm p-6">
-                <form method="POST" action="{{ url('/bolsa') }}" enctype="multipart/form-data" class="space-y-4">
+                <form method="POST" action="{{ url('/bolsa') }}" enctype="multipart/form-data" class="space-y-4" x-data="formState()" @submit="start($event)">
                     @csrf
                     <x-form-input name="nombre" label="Nombre completo" required />
                     <x-form-input name="email" type="email" label="Email" required />
@@ -33,7 +33,10 @@
                     <x-form-textarea name="mensaje" label="Mensaje" rows="4" placeholder="Cuéntanos sobre tu experiencia" />
                     <input type="hidden" name="turnstile_token" id="turnstile_token_bolsa">
                     <x-turnstile />
-                    <x-button-primary type="submit" data-gtm-event="generate_lead" data-meta-event="Lead">Enviar aplicación</x-button-primary>
+                    <x-button-primary type="submit" data-gtm-event="generate_lead" data-meta-event="Lead" x-bind:disabled="submitting">
+                        <span x-show="!submitting">Enviar aplicación</span>
+                        <span x-show="submitting">Enviando...</span>
+                    </x-button-primary>
                 </form>
             </div>
         </div>

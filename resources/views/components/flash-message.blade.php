@@ -10,7 +10,13 @@
 @endphp
 
 @if($message)
-    <div class="rounded-lg border px-4 py-3 text-sm {{ $classes }}">
-        {{ $message }}
-    </div>
+    <div
+        x-data
+        x-init="
+            window.dispatchEvent(new CustomEvent('notify', {
+                detail: { type: '{{ $type }}', message: @js($message) }
+            }));
+        "
+        class="hidden"
+    ></div>
 @endif

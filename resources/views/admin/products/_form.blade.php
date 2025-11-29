@@ -34,5 +34,8 @@
 <x-form-textarea name="descripcion_larga" label="Descripción larga" :value="$product->descripcion_larga ?? ''" rows="6" />
 <div class="flex items-center justify-end gap-2">
     <a href="{{ url('/admin/products') }}" class="text-sm text-slate-600 hover:underline">Cancelar</a>
-    <x-button-primary type="submit">Guardar</x-button-primary>
+    <x-button-primary type="submit" x-bind:disabled="submitting">
+        <span x-show="!submitting">Guardar</span>
+        <span x-show="submitting">Guardando...</span>
+    </x-button-primary>
 </div>

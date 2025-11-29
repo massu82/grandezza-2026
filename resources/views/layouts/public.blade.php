@@ -23,9 +23,6 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     @stack('styles')
 
     <!-- Google Analytics 4 -->
@@ -78,9 +75,7 @@
         x-data="{
             ageVerified: localStorage.getItem('ageVerified') === 'true',
             cookiesAccepted: localStorage.getItem('cookiesAccepted') === 'true',
-            cartOpen: false,
         }"
-        @cart-open.window="cartOpen = true"
         x-init="
             $watch('ageVerified', v => { if(v) localStorage.setItem('ageVerified','true'); });
             $watch('cookiesAccepted', v => { if(v) localStorage.setItem('cookiesAccepted','true'); });
@@ -102,7 +97,22 @@
                 <p class="text-xs text-zinc-500">Al continuar aceptas nuestros términos y aviso de privacidad.</p>
             </div>
         </div>
-        <div x-data="{ open: false }" class="sticky top-0 z-50 w-full bg-white">
+        <div
+            class="sticky top-0 z-50 w-full transition bg-white"
+            x-data="mainHeader({
+                cartCount: {{ $cartCount }},
+                links: @js([
+                    ['label' => 'Home', 'href' => url('/')],
+                    ['label' => 'Vinos', 'href' => url('/vinos')],
+                    ['label' => 'Categorías', 'href' => url('/categorias')],
+                    ['label' => 'Nosotros', 'href' => url('/nosotros')],
+                    ['label' => 'Contacto', 'href' => url('/contacto')],
+                ]),
+            })"
+            :class="{
+                'shadow-lg bg-white/95 backdrop-blur': scrolled
+            }"
+        >
             <div class="bg-zinc-950 text-white text-xs tracking-[0.18em] uppercase">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-3 text-accent">
@@ -143,18 +153,23 @@
                             <span class="sr-only">Grandezza</span>
                         </a>
                         <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-zinc-900 uppercase tracking-wide">
-                            <a href="{{ url('/') }}" class="hover:text-primary transition">Home</a>
-                            <a href="{{ url('/vinos') }}" class="hover:text-primary transition">Vinos</a>
-                            <a href="{{ url('/categorias') }}" class="hover:text-primary transition">Categorías</a>
-                            <a href="{{ url('/nosotros') }}" class="hover:text-primary transition">Nosotros</a>
-                            <a href="{{ url('/contacto') }}" class="hover:text-primary transition">Contacto</a>
+                            <template x-for="link in links" :key="link.href">
+                                <a :href="link.href" class="hover:text-primary transition" x-text="link.label"></a>
+                            </template>
                             <form action="{{ url('/vinos') }}" method="GET" class="relative">
                                 <input type="text" name="q" placeholder="Buscar vinos" class="pl-3 pr-9 py-2 rounded-full border border-zinc-300 bg-white text-sm text-dark focus:border-primary focus:ring-accent">
                                 <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-primary">
                                     <x-heroicon-o-magnifying-glass class="w-4 h-4" />
                                 </button>
                             </form>
-                            <button type="button" @click="cartOpen = true" class="relative inline-flex items-center gap-2 px-3 py-2 rounded-full bg-black text-white hover:bg-primary transition" aria-label="Carrito">
+                            <button
+                                type="button"
+                                @click="$dispatch('cart-open')"
+                                class="relative"
+                                x-data="uiButton({ variant: 'dark' })"
+                                :class="classes()"
+                                aria-label="Carrito"
+                            >
                                 <x-heroicon-o-shopping-bag class="w-5 h-5" />
                                 @if($cartCount > 0)
                                     <span class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 rounded-full bg-accent text-zinc-900 text-xs font-bold">{{ $cartCount }}</span>
@@ -162,7 +177,7 @@
                             </button>
                         </nav>
                         <div class="md:hidden">
-                            <button @click="open = !open" class="p-2 rounded-md border border-zinc-200 text-zinc-600 focus:outline-none focus:ring-2 focus:ring-accent">
+                            <button @click="toggle()" x-data="uiButton({ variant: 'outline' })" :class="classes()">
                                 <x-heroicon-o-bars-3 class="w-5 h-5" />
                             </button>
                         </div>
@@ -178,12 +193,10 @@
                 </div>
                 <div x-show="open" x-transition class="md:hidden bg-white border-t border-zinc-200">
                     <div class="px-4 py-3 space-y-3">
-                        <a href="{{ url('/') }}" class="block py-2 text-zinc-900 hover:text-primary">Home</a>
-                        <a href="{{ url('/vinos') }}" class="block py-2 text-zinc-900 hover:text-primary">Vinos</a>
-                        <a href="{{ url('/categorias') }}" class="block py-2 text-zinc-900 hover:text-primary">Categorías</a>
-                        <a href="{{ url('/nosotros') }}" class="block py-2 text-zinc-900 hover:text-primary">Nosotros</a>
-                        <a href="{{ url('/contacto') }}" class="block py-2 text-zinc-900 hover:text-primary">Contacto</a>
-                        <button type="button" @click="cartOpen = true" class="relative block text-left w-full py-2 text-zinc-900 hover:text-primary inline-flex items-center gap-2" aria-label="Carrito">
+                        <template x-for="link in links" :key="`mobile-${link.href}`">
+                            <a :href="link.href" class="block py-2 text-zinc-900 hover:text-primary" x-text="link.label"></a>
+                        </template>
+                        <button type="button" @click="$dispatch('cart-open')" class="relative block text-left w-full py-2 text-zinc-900 hover:text-primary inline-flex items-center gap-2" aria-label="Carrito">
                             <x-heroicon-o-shopping-bag class="w-5 h-5" />
                             @if($cartCount > 0)
                                 <span class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 rounded-full bg-accent text-zinc-900 text-xs font-bold">{{ $cartCount }}</span>
@@ -201,14 +214,7 @@
         </div>
 
         <main class="flex-1 bg-light">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                @if(session('success'))
-                    <x-flash-message type="success" :message="session('success')" />
-                @endif
-                @if(session('error'))
-                    <x-flash-message type="error" :message="session('error')" />
-                @endif
-            </div>
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4"></div>
             {{ $slot ?? '' }}
         </main>
 
@@ -307,11 +313,11 @@
         <x-cart-drawer />
     </div>
 
-    <div x-data="{ visible: false }" x-init="window.addEventListener('scroll', () => { visible = window.scrollY > 240; })" class="fixed bottom-6 right-6 z-[999]">
+    <div x-data="scrollToTop()" class="fixed bottom-6 right-6 z-[999]">
         <button
             x-show="visible"
             x-transition
-            @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+            @click="scroll()"
             class="flex items-center justify-center w-10 h-10 bg-zinc-800 text-white text-base font-semibold rounded-full shadow-lg hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:ring-offset-2 focus:ring-offset-white"
             aria-label="Volver arriba"
             type="button"
@@ -320,6 +326,219 @@
         </button>
     </div>
 
+    <div
+        x-data
+        x-init="
+            @if(session('success'))
+                window.dispatchEvent(new CustomEvent('notify', { detail: { type: 'success', message: @js(session('success')) } }));
+            @endif
+            @if(session('error'))
+                window.dispatchEvent(new CustomEvent('notify', { detail: { type: 'error', message: @js(session('error')) } }));
+            @endif
+        "
+        class="fixed top-4 right-4 z-[1100] w-full max-w-sm space-y-3"
+        aria-live="assertive"
+    >
+        <template x-for="note in $store.notifications?.list || []" :key="note.id">
+            <div
+                x-show="true"
+                x-transition
+                class="rounded-lg border px-4 py-3 shadow-lg backdrop-blur bg-white/95 text-sm text-slate-800"
+                :class="{
+                    'border-emerald-200 text-emerald-800 bg-emerald-50/90': note.type === 'success',
+                    'border-secondary/40 text-secondary bg-light/90': note.type === 'error',
+                    'border-slate-200 text-slate-800 bg-white/90': !['success','error'].includes(note.type),
+                }"
+            >
+                <div class="flex items-start gap-3">
+                    <div class="mt-0.5">
+                        <template x-if="note.type === 'success'">✅</template>
+                        <template x-if="note.type === 'error'">⚠️</template>
+                        <template x-if="!['success','error'].includes(note.type)">ℹ️</template>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold capitalize" x-text="note.type"></p>
+                        <p class="mt-0.5" x-text="note.message"></p>
+                    </div>
+                    <button type="button" class="text-slate-500 hover:text-slate-700" @click="$store.notifications.dismiss(note.id)" aria-label="Cerrar notificación">✕</button>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('carousel', ({ length = 1, autoplay = 0, loop = false, perView = { 0: 1 }, gap = 16 } = {}) => ({
+                length: Math.max(1, length),
+                autoplay,
+                loop,
+                gap,
+                perViewConfig: perView,
+                perViewValue: 1,
+                current: 0,
+                timer: null,
+                resizeHandler: null,
+                init() {
+                    this.resolvePerView();
+                    this.resizeHandler = () => this.resolvePerView();
+                    window.addEventListener('resize', this.resizeHandler);
+                    if (this.autoplay) this.startAutoplay();
+                },
+                destroy() {
+                    window.removeEventListener('resize', this.resizeHandler);
+                    this.stopAutoplay();
+                },
+                resolvePerView() {
+                    const width = window.innerWidth;
+                    const entries = Object.entries(this.perViewConfig || { 0: 1 })
+                        .map(([bp, val]) => [Number(bp), val])
+                        .sort((a, b) => a[0] - b[0]);
+                    let match = entries[0] ? entries[0][1] : 1;
+                    entries.forEach(([bp, val]) => { if (width >= bp) match = val; });
+                    this.perViewValue = match;
+                    const maxIndex = this.maxIndex();
+                    if (this.current > maxIndex) this.current = maxIndex;
+                },
+                maxIndex() {
+                    return this.loop
+                        ? this.length - 1
+                        : Math.max(0, this.length - Math.ceil(this.perViewValue));
+                },
+                positions() {
+                    return this.loop
+                        ? this.length
+                        : Math.max(1, this.length - Math.ceil(this.perViewValue) + 1);
+                },
+                goTo(index) {
+                    if (this.loop) {
+                        if (index < 0) index = this.length - 1;
+                        if (index >= this.length) index = 0;
+                    } else {
+                        index = Math.max(0, Math.min(index, this.maxIndex()));
+                    }
+                    this.current = index;
+                    this.restartAutoplay();
+                },
+                next() { this.goTo(this.current + 1); },
+                prev() { this.goTo(this.current - 1); },
+                startAutoplay() {
+                    if (!this.autoplay || this.timer) return;
+                    this.timer = setInterval(() => this.next(), this.autoplay);
+                },
+                stopAutoplay() {
+                    if (this.timer) {
+                        clearInterval(this.timer);
+                        this.timer = null;
+                    }
+                },
+                restartAutoplay() {
+                    if (!this.autoplay) return;
+                    this.stopAutoplay();
+                    this.startAutoplay();
+                },
+                trackStyle() {
+                    return {
+                        transform: `translateX(-${(100 / this.perViewValue) * this.current}%)`,
+                        gap: `${this.gap}px`,
+                    };
+                },
+                slideStyle() {
+                    return {
+                        width: `calc((100% - ${(this.perViewValue - 1) * this.gap}px)/${this.perViewValue})`,
+                    };
+                },
+                isActive(index) {
+                    return index === this.current;
+                },
+            }));
+
+            Alpine.data('gallery', ({ length = 1, thumbBreakpoints = { 0: 4, 640: 5 }, gap = 10 } = {}) => ({
+                length: Math.max(1, length),
+                current: 0,
+                thumbBreakpoints,
+                thumbPerView: 4,
+                gap,
+                resizeHandler: null,
+                init() {
+                    this.setThumbs();
+                    this.resizeHandler = () => this.setThumbs();
+                    window.addEventListener('resize', this.resizeHandler);
+                },
+                destroy() {
+                    window.removeEventListener('resize', this.resizeHandler);
+                },
+                setThumbs() {
+                    const width = window.innerWidth;
+                    const entries = Object.entries(this.thumbBreakpoints || { 0: 4 })
+                        .map(([bp, val]) => [Number(bp), val])
+                        .sort((a, b) => a[0] - b[0]);
+                    let match = entries[0] ? entries[0][1] : 4;
+                    entries.forEach(([bp, val]) => { if (width >= bp) match = val; });
+                    this.thumbPerView = match;
+                },
+                goTo(index) {
+                    if (index < 0) index = this.length - 1;
+                    if (index >= this.length) index = 0;
+                    this.current = index;
+                },
+                next() { this.goTo(this.current + 1); },
+                prev() { this.goTo(this.current - 1); },
+                mainTrackStyle() {
+                    return { transform: `translateX(-${this.current * 100}%)` };
+                },
+                thumbTrackStyle() {
+                    const offset = Math.min(
+                        Math.max(this.current - 1, 0),
+                        Math.max(0, this.length - this.thumbPerView)
+                    );
+                    return {
+                        transform: `translateX(-${(100 / this.thumbPerView) * offset}%)`,
+                        gap: `${this.gap}px`,
+                    };
+                },
+                thumbSlideStyle() {
+                    return {
+                        width: `calc((100% - ${(this.thumbPerView - 1) * this.gap}px)/${this.thumbPerView})`,
+                    };
+                },
+                isActive(index) { return this.current === index; },
+            }));
+
+            Alpine.data('productCard', ({ id }) => ({
+                id,
+                isLoading: false,
+                added: false,
+                errored: false,
+                listener: null,
+                handleSubmit() {
+                    this.isLoading = true;
+                    this.added = false;
+                    this.errored = false;
+                },
+                handleCartEvent(event) {
+                    const detail = event.detail || {};
+                    if (!detail.product_id || Number(detail.product_id) !== Number(this.id)) return;
+                    this.isLoading = false;
+                    if (detail.status === 'success') {
+                        this.added = true;
+                        this.errored = false;
+                        setTimeout(() => { this.added = false; }, 1800);
+                    } else {
+                        this.errored = true;
+                        setTimeout(() => { this.errored = false; }, 2000);
+                    }
+                },
+                init() {
+                    this.listener = (e) => this.handleCartEvent(e);
+                    window.addEventListener('cart:updated', this.listener);
+                },
+                destroy() {
+                    window.removeEventListener('cart:updated', this.listener);
+                },
+            }));
+
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

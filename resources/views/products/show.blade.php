@@ -11,7 +11,14 @@
         </nav>
 
         <div class="grid md:grid-cols-2 gap-8">
-            <div>
+            <div
+                x-data="gallery({
+                    length: {{ 1 + count($product->galeria ?? []) }},
+                    thumbBreakpoints: { 0: 4, 640: 5 },
+                    gap: 10,
+                })"
+                class="space-y-3"
+            >
                 @php
                     $imgBase = $product->imagen_principal ?? null;
                     $isExternal = $imgBase && str_starts_with($imgBase, 'http');
@@ -22,38 +29,70 @@
                     $largeJpg = $useStorageThumbs ? asset('storage/products/large/'.$baseName.'.jpg') : null;
                     $fallbackImg = $isExternal ? $imgBase : ($isLocalAsset ? asset($imgBase) : 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1100&q=80');
                 @endphp
-                <div class="swiper productSwiper rounded-2xl overflow-hidden shadow">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <picture>
-                                @if($largeWebp)<source srcset="{{ $largeWebp }}" type="image/webp">@endif
-                                @if($largeJpg)<source srcset="{{ $largeJpg }}" type="image/jpeg">@endif
-                                <img loading="lazy" src="{{ $largeJpg ?? $fallbackImg }}" alt="{{ $product->nombre }}" class="w-full h-96 object-cover">
-                            </picture>
-                        </div>
-                        @foreach(($product->galeria ?? []) as $imagen)
-                            <div class="swiper-slide">
-                                <img loading="lazy" src="{{ $imagen }}" alt="{{ $product->nombre }}" class="w-full h-96 object-cover">
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="swiper-pagination"></div>
-                </div>
-                @if(($product->galeria ?? []) && count($product->galeria))
-                    <div class="swiper productThumbs mt-3">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide cursor-pointer">
+                <div class="relative rounded-2xl overflow-hidden shadow">
+                    <div class="overflow-hidden">
+                        <div class="flex transition-transform duration-500 ease-out" :style="mainTrackStyle()">
+                            <div class="w-full shrink-0">
                                 <picture>
-                                    @if($baseName && !$isExternal && !$isLocalAsset)
-                                        <source srcset="{{ asset('storage/products/thumb/'.$baseName.'.webp') }}" type="image/webp">
-                                        <source srcset="{{ asset('storage/products/thumb/'.$baseName.'.jpg') }}" type="image/jpeg">
-                                    @endif
-                                    <img loading="lazy" src="{{ $baseName && !$isExternal && !$isLocalAsset ? asset('storage/products/thumb/'.$baseName.'.jpg') : $fallbackImg }}" alt="{{ $product->nombre }}" class="w-full h-20 object-cover rounded-lg border border-slate-200">
+                                    @if($largeWebp)<source srcset="{{ $largeWebp }}" type="image/webp">@endif
+                                    @if($largeJpg)<source srcset="{{ $largeJpg }}" type="image/jpeg">@endif
+                                    <img loading="lazy" src="{{ $largeJpg ?? $fallbackImg }}" alt="{{ $product->nombre }}" class="w-full h-96 object-cover">
                                 </picture>
                             </div>
+                            @foreach(($product->galeria ?? []) as $imagen)
+                                <div class="w-full shrink-0">
+                                    <img loading="lazy" src="{{ $imagen }}" alt="{{ $product->nombre }}" class="w-full h-96 object-cover">
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="absolute inset-y-0 left-3 flex items-center">
+                        <button type="button" class="slider-nav" @click="prev" aria-label="Imagen anterior">‹</button>
+                    </div>
+                    <div class="absolute inset-y-0 right-3 flex items-center">
+                        <button type="button" class="slider-nav" @click="next" aria-label="Imagen siguiente">›</button>
+                    </div>
+                    <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                        <template x-for="index in {{ 1 + count($product->galeria ?? []) }}" :key="`gallery-dot-${index}`">
+                            <button
+                                type="button"
+                                class="slider-dot slider-dot-dark"
+                                :class="{ 'slider-dot-active': isActive(index - 1) }"
+                                @click="goTo(index - 1)"
+                                :aria-label="`Ir a la imagen ${index}`"
+                            ></button>
+                        </template>
+                    </div>
+                </div>
+                @if(($product->galeria ?? []) && count($product->galeria))
+                    <div class="relative overflow-hidden">
+                        <div class="flex transition-transform duration-300 ease-out" :style="thumbTrackStyle()">
+                            <div class="shrink-0" :style="thumbSlideStyle()">
+                                <button
+                                    type="button"
+                                    class="w-full block overflow-hidden rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-accent"
+                                    :class="{ 'ring-2 ring-accent border-transparent': isActive(0) }"
+                                    @click="goTo(0)"
+                                >
+                                    <picture>
+                                        @if($baseName && !$isExternal && !$isLocalAsset)
+                                            <source srcset="{{ asset('storage/products/thumb/'.$baseName.'.webp') }}" type="image/webp">
+                                            <source srcset="{{ asset('storage/products/thumb/'.$baseName.'.jpg') }}" type="image/jpeg">
+                                        @endif
+                                        <img loading="lazy" src="{{ $baseName && !$isExternal && !$isLocalAsset ? asset('storage/products/thumb/'.$baseName.'.jpg') : $fallbackImg }}" alt="{{ $product->nombre }}" class="w-full h-20 object-cover">
+                                    </picture>
+                                </button>
+                            </div>
                             @foreach($product->galeria as $imagen)
-                                <div class="swiper-slide cursor-pointer">
-                                    <img loading="lazy" src="{{ $imagen }}" alt="{{ $product->nombre }}" class="w-full h-20 object-cover rounded-lg border border-slate-200">
+                                <div class="shrink-0" :style="thumbSlideStyle()">
+                                    <button
+                                        type="button"
+                                        class="w-full block overflow-hidden rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-accent"
+                                        :class="{ 'ring-2 ring-accent border-transparent': isActive({{ $loop->iteration }}) }"
+                                        @click="goTo({{ $loop->iteration }})"
+                                    >
+                                        <img loading="lazy" src="{{ $imagen }}" alt="{{ $product->nombre }}" class="w-full h-20 object-cover">
+                                    </button>
                                 </div>
                             @endforeach
                         </div>
@@ -122,56 +161,43 @@
                 </div>
                 <a href="{{ url('/vinos') }}" class="text-sm font-semibold text-primary hover:text-secondary">Ver todos</a>
             </div>
-            <div class="swiper relatedProducts">
-                    <div class="swiper-wrapper">
+            <div
+                class="relative"
+                x-data="carousel({
+                    length: {{ max(1, ($related ?? collect())->count()) }},
+                    perView: { 0: 1.1, 640: 2, 1024: 4 },
+                    gap: 16,
+                })"
+            >
+                <div class="overflow-hidden">
+                    <div class="flex transition-transform duration-500 ease-out" :style="trackStyle()">
                         @foreach($related as $item)
-                            <div class="swiper-slide pb-6 h-full">
+                            <div class="shrink-0 pb-6 h-full" :style="slideStyle()">
                                 <x-product-card :product="$item" />
                             </div>
                         @endforeach
+                    </div>
                 </div>
-                <div class="swiper-pagination"></div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
+                <div class="flex items-center justify-between mt-4">
+                    <div class="flex items-center gap-2">
+                        <template x-for="index in positions()" :key="`related-dot-${index}`">
+                            <button
+                                type="button"
+                                class="slider-dot slider-dot-dark"
+                                :class="{ 'slider-dot-active': isActive(index - 1) }"
+                                @click="goTo(index - 1)"
+                                :aria-label="`Ir al slide ${index}`"
+                            ></button>
+                        </template>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" class="slider-nav" @click="prev" aria-label="Anterior">‹</button>
+                        <button type="button" class="slider-nav" @click="next" aria-label="Siguiente">›</button>
+                    </div>
+                </div>
             </div>
         </section>
     @endif
 
     <x-concierge-cta />
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                let thumbs;
-                if (document.querySelector('.productThumbs')) {
-                    thumbs = new Swiper('.productThumbs', {
-                        slidesPerView: 4,
-                        spaceBetween: 8,
-                        watchSlidesProgress: true,
-                        breakpoints: {
-                            640: { slidesPerView: 5, spaceBetween: 10 },
-                        },
-                    });
-                }
-
-                new Swiper('.productSwiper', {
-                    loop: true,
-                    pagination: { el: '.productSwiper .swiper-pagination', clickable: true },
-                    slidesPerView: 1,
-                    thumbs: thumbs ? { swiper: thumbs } : {},
-                });
-
-                new Swiper('.relatedProducts', {
-                    spaceBetween: 16,
-                    slidesPerView: 1.1,
-                    breakpoints: {
-                        640: { slidesPerView: 2, spaceBetween: 16 },
-                        1024: { slidesPerView: 4, spaceBetween: 20 },
-                    },
-                    pagination: { el: '.relatedProducts .swiper-pagination', clickable: true },
-                    navigation: { nextEl: '.relatedProducts .swiper-button-next', prevEl: '.relatedProducts .swiper-button-prev' },
-                });
-            });
-        </script>
-    @endpush
 </x-layout-public>

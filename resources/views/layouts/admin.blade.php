@@ -94,6 +94,47 @@
             </main>
         </div>
     </div>
+
+    <div
+        x-data
+        x-init="
+            @if(session('success'))
+                window.dispatchEvent(new CustomEvent('notify', { detail: { type: 'success', message: @js(session('success')) } }));
+            @endif
+            @if(session('error'))
+                window.dispatchEvent(new CustomEvent('notify', { detail: { type: 'error', message: @js(session('error')) } }));
+            @endif
+        "
+        class="fixed top-4 right-4 z-[1100] w-full max-w-sm space-y-3"
+        aria-live="assertive"
+    >
+        <template x-for="note in $store.notifications?.list || []" :key="note.id">
+            <div
+                x-show="true"
+                x-transition
+                class="rounded-lg border px-4 py-3 shadow-lg backdrop-blur bg-white/95 text-sm text-slate-800"
+                :class="{
+                    'border-emerald-200 text-emerald-800 bg-emerald-50/90': note.type === 'success',
+                    'border-secondary/40 text-secondary bg-light/90': note.type === 'error',
+                    'border-slate-200 text-slate-800 bg-white/90': !['success','error'].includes(note.type),
+                }"
+            >
+                <div class="flex items-start gap-3">
+                    <div class="mt-0.5">
+                        <template x-if="note.type === 'success'">✅</template>
+                        <template x-if="note.type === 'error'">⚠️</template>
+                        <template x-if="!['success','error'].includes(note.type)">ℹ️</template>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold capitalize" x-text="note.type"></p>
+                        <p class="mt-0.5" x-text="note.message"></p>
+                    </div>
+                    <button type="button" class="text-slate-500 hover:text-slate-700" @click="$store.notifications.dismiss(note.id)" aria-label="Cerrar notificación">✕</button>
+                </div>
+            </div>
+        </template>
+    </div>
+
     @stack('scripts')
 </body>
 </html>

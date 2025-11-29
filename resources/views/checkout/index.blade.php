@@ -4,7 +4,7 @@
             <div class="lg:col-span-2 bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-4">
                 <h1 class="text-2xl font-semibold text-primary mb-2" style="font-family: 'Playfair Display', serif;">Checkout</h1>
                 <p class="text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-4 py-2">Entrega únicamente por recolección en tienda. Pago al recoger.</p>
-                <form method="POST" action="{{ url('/checkout') }}" class="space-y-4">
+                <form method="POST" action="{{ url('/checkout') }}" class="space-y-4" x-data="formState()" @submit="start($event)">
                     @csrf
                     <div class="grid md:grid-cols-2 gap-4">
                         <x-form-input name="nombre_cliente" label="Nombre completo" required />
@@ -15,7 +15,10 @@
                     <x-form-textarea name="notas_cliente" label="Comentarios" placeholder="Indicaciones especiales" />
                     <x-turnstile />
                     <div class="flex items-center gap-3">
-                        <x-button-primary type="submit" data-gtm-event="purchase" data-meta-event="Purchase">Confirmar pedido</x-button-primary>
+                        <x-button-primary type="submit" data-gtm-event="purchase" data-meta-event="Purchase" x-bind:disabled="submitting">
+                            <span x-show="!submitting">Confirmar pedido</span>
+                            <span x-show="submitting">Procesando...</span>
+                        </x-button-primary>
                         <span class="text-xs text-slate-500">Al confirmar aceptas nuestros términos y privacidad.</span>
                     </div>
                 </form>

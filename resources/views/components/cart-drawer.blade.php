@@ -15,16 +15,24 @@
     $total = $items->sum('subtotal');
 @endphp
 
-<div x-cloak x-show="cartOpen" class="fixed inset-0 z-50 flex justify-end">
-    <div class="absolute inset-0 bg-black/50" @click="cartOpen = false"></div>
-    <div class="relative bg-white w-full sm:w-[420px] max-w-md h-full shadow-2xl border-l border-zinc-200 flex flex-col"
-         x-data="cartDrawerComponent(@js($items), @js($total), '{{ csrf_token() }}')" x-init="registerInstance()">
+<div
+    x-data="cartDrawer({ items: @js($items), total: @js($total), csrf: '{{ csrf_token() }}' })"
+    x-cloak
+    x-show="open"
+    x-on:cart-open.window="open = true"
+    x-on:cart-close.window="open = false"
+    x-on:cart-toggle.window="open = !open"
+    x-on:cart-update.window="handleExternalUpdate($event.detail)"
+    class="fixed inset-0 z-50 flex justify-end"
+>
+    <div class="absolute inset-0 bg-black/50" @click="open = false"></div>
+    <div class="relative bg-white w-full sm:w-[420px] max-w-md h-full shadow-2xl border-l border-zinc-200 flex flex-col">
         <div class="px-4 py-4 border-b border-zinc-200 flex items-center justify-between">
             <div>
                 <p class="text-xs uppercase tracking-[0.2em] text-accent">Carrito</p>
                 <h3 class="text-lg font-semibold text-zinc-900">Tus vinos</h3>
             </div>
-            <button @click="cartOpen = false" class="text-zinc-500 hover:text-primary">
+            <button @click="open = false" class="text-zinc-500 hover:text-primary">
                 <x-heroicon-o-x-mark class="w-5 h-5" />
             </button>
         </div>
@@ -72,20 +80,27 @@
 @once
     @push('scripts')
         <script>
-            function cartDrawerComponent(initialItems, initialTotal, csrfToken) {
+            function cartDrawer({ items = [], total = 0, csrf = '' } = {}) {
                 return {
-                    items: initialItems,
-                    total: initialTotal,
+                    items,
+                    total,
+                    csrf,
                     loading: false,
-                    registerInstance() {
-                        window.cartDrawerController = window.cartDrawerController || {
-                            instances: [],
-                            update(items, total) {
-                                this.instances.forEach(i => i.setData(items, total));
-                                window.dispatchEvent(new Event('cart-open'));
-                            }
-                        };
-                        window.cartDrawerController.instances.push(this);
+                    open: false,
+                    init() {
+                        this.$watch('items', () => {
+                            this.dispatchUpdate();
+                        });
+                    },
+                    dispatchUpdate() {
+                        window.dispatchEvent(new CustomEvent('cart:state', {
+                            detail: { items: this.items, total: this.total }
+                        }));
+                    },
+                    handleExternalUpdate(detail = {}) {
+                        if (!detail.items || typeof detail.total === 'undefined') return;
+                        this.setData(detail.items, detail.total);
+                        this.open = true;
                     },
                     setData(items, total) {
                         this.items = items;
@@ -102,7 +117,7 @@
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded',
                                     'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': csrfToken,
+                                    'X-CSRF-TOKEN': this.csrf,
                                 },
                                 body: new URLSearchParams({
                                     product_id: item.product_id,
@@ -110,7 +125,10 @@
                                 }),
                             });
                             const data = await response.json();
-                            this.setData(data[0], data[1]);
+                            this.handleExternalUpdate({ items: data[0], total: data[1] });
+                            window.dispatchEvent(new CustomEvent('cart-update', {
+                                detail: { items: data[0], total: data[1] }
+                            }));
                         } catch (e) {
                             console.error(e);
                         } finally {
@@ -125,14 +143,17 @@
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded',
                                     'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': csrfToken,
+                                    'X-CSRF-TOKEN': this.csrf,
                                 },
                                 body: new URLSearchParams({
                                     product_id: item.product_id,
                                 }),
                             });
                             const data = await response.json();
-                            this.setData(data[0], data[1]);
+                            this.handleExternalUpdate({ items: data[0], total: data[1] });
+                            window.dispatchEvent(new CustomEvent('cart-update', {
+                                detail: { items: data[0], total: data[1] }
+                            }));
                         } catch (e) {
                             console.error(e);
                         } finally {
@@ -147,6 +168,12 @@
                 const handler = async (form) => {
                     const btn = form.querySelector('button[type="submit"]');
                     const card = form.closest('.group');
+                    const productId = form.querySelector('input[name="product_id"]')?.value;
+                    const notify = (status) => {
+                        window.dispatchEvent(new CustomEvent('cart:updated', {
+                            detail: { status, product_id: productId },
+                        }));
+                    };
                     btn?.setAttribute('disabled', 'disabled');
                     try {
                         const response = await fetch(form.action, {
@@ -159,14 +186,16 @@
                             body: new URLSearchParams(new FormData(form)),
                         });
                         const data = await response.json();
-                        if (window.cartDrawerController) {
-                            window.cartDrawerController.update(data[0], data[1]);
-                        }
+                        window.dispatchEvent(new CustomEvent('cart-update', {
+                            detail: { items: data[0], total: data[1] }
+                        }));
+                        notify('success');
                         if (card) {
                             card.classList.add('animate-pulse');
                             setTimeout(() => card.classList.remove('animate-pulse'), 400);
                         }
                     } catch (e) {
+                        notify('error');
                         form.submit(); // fallback full submit
                     } finally {
                         btn?.removeAttribute('disabled');

@@ -17,16 +17,19 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-3 justify-start md:justify-center">
-                            <form method="POST" action="{{ url('/carrito/actualizar') }}" class="flex items-center gap-2">
+                            <form method="POST" action="{{ url('/carrito/actualizar') }}" class="flex items-center gap-2" x-data="formState()" @submit="start($event)">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $item['product_id'] ?? $item['id'] }}">
                                 <input type="number" name="quantity" value="{{ $item['quantity'] ?? $item['qty'] ?? 1 }}" min="1" class="w-16 rounded-md border-zinc-300 text-sm text-center">
-                                <x-button-primary type="submit">Actualizar</x-button-primary>
+                                <x-button-primary type="submit" x-bind:disabled="submitting">
+                                    <span x-show="!submitting">Actualizar</span>
+                                    <span x-show="submitting">Actualizando...</span>
+                                </x-button-primary>
                             </form>
-                            <form method="POST" action="{{ url('/carrito/eliminar') }}">
+                            <form method="POST" action="{{ url('/carrito/eliminar') }}" x-data="formState()" @submit="start($event)">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $item['product_id'] ?? $item['id'] }}">
-                                <button class="text-sm text-primary hover:underline">Eliminar</button>
+                                <button class="text-sm text-primary hover:underline" x-bind:disabled="submitting" x-text="submitting ? 'Eliminando...' : 'Eliminar'"></button>
                             </form>
                         </div>
                         <div class="text-left md:text-right md:min-w-[140px]">

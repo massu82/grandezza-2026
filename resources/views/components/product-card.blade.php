@@ -27,7 +27,10 @@
     $priceColor = 'text-zinc-900';
 @endphp
 
-<div class="group {{ $cardBg }} rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col h-full min-h-[420px]">
+<div
+    class="group {{ $cardBg }} rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col h-full min-h-[420px]"
+    x-data="productCard({ id: {{ $product->id }} })"
+>
     <div class="relative">
         <picture>
             @if($thumbWebp)
@@ -82,12 +85,20 @@
                 @endif
             </div>
         </div>
-        <form method="POST" action="{{ url('/carrito/agregar') }}" class="mt-auto pt-4 swiper-no-swiping" data-cart-form data-swiper-no-swiping="true">
+        <form
+            method="POST"
+            action="{{ url('/carrito/agregar') }}"
+            class="mt-auto pt-4"
+            data-cart-form
+            @submit="handleSubmit"
+        >
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="quantity" value="1">
             <button
                 class="w-full justify-center font-medium px-4 py-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:ring-offset-2 {{ $isFeatured ? 'bg-zinc-700 text-white hover:bg-zinc-600 focus:ring-offset-dark' : 'bg-gradient-to-r from-zinc-600 via-zinc-700 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-700 focus:ring-offset-light' }}"
+                :class="{ 'opacity-70 pointer-events-none': isLoading }"
+                :disabled="isLoading"
                 data-gtm-event="add_to_cart"
                 data-gtm-product-id="{{ $product->id }}"
                 data-gtm-product-name="{{ $product->nombre }}"
@@ -95,7 +106,10 @@
             >
                 <span class="inline-flex items-center justify-center gap-2">
                     <x-heroicon-s-shopping-cart class="w-5 h-5" />
-                    Agregar al carrito
+                    <span x-show="!isLoading && !added && !errored">Agregar al carrito</span>
+                    <span x-show="isLoading">Agregando...</span>
+                    <span x-show="added">Agregado ✓</span>
+                    <span x-show="errored">Reintentar</span>
                 </span>
             </button>
         </form>

@@ -9,7 +9,7 @@
         <p class="text-sm text-zinc-600">Envíanos un mensaje y nuestro equipo te ayudará a elegir el vino perfecto.</p>
         <div class="grid md:grid-cols-3 gap-8">
             <div class="md:col-span-2 bg-white border border-zinc-200 rounded-xl shadow-sm p-6">
-                <form method="POST" action="{{ url('/contacto') }}" class="space-y-4">
+                <form method="POST" action="{{ url('/contacto') }}" class="space-y-4" x-data="formState()" @submit="start($event)">
                     @csrf
                     <div class="grid md:grid-cols-2 gap-4">
                         <x-form-input name="nombre" label="Nombre" required />
@@ -20,13 +20,16 @@
                     <x-form-textarea name="mensaje" label="Mensaje" rows="5" required />
                     <input type="hidden" name="turnstile_token" id="turnstile_token">
                     <x-turnstile />
-                    <x-button-primary type="submit" data-gtm-event="generate_lead" data-meta-event="Lead">Enviar mensaje</x-button-primary>
+                    <x-button-primary type="submit" data-gtm-event="generate_lead" data-meta-event="Lead" x-bind:disabled="submitting">
+                        <span x-show="!submitting">Enviar mensaje</span>
+                        <span x-show="submitting">Enviando...</span>
+                    </x-button-primary>
                 </form>
 
                 <div class="mt-8 border-t border-zinc-200 pt-6">
                     <h2 class="text-xl font-semibold text-primary mb-2" style="font-family: 'Playfair Display', serif;">Pedidos Dock / Empresas / Proveedores</h2>
                     <p class="text-sm text-zinc-600 mb-4">Si necesitas surtir eventos, compras corporativas o eres proveedor, comparte tus datos y nos pondremos en contacto.</p>
-                    <form method="POST" action="{{ url('/contacto') }}" class="space-y-3">
+                    <form method="POST" action="{{ url('/contacto') }}" class="space-y-3" x-data="formState()" @submit="start($event)">
                         @csrf
                         <div class="grid md:grid-cols-2 gap-3">
                             <x-form-input name="empresa" label="Empresa / Marca" />
@@ -36,7 +39,10 @@
                         <x-form-textarea name="mensaje_corporativo" label="Requerimiento" rows="4" />
                         <input type="hidden" name="turnstile_token" id="turnstile_token_empresa">
                         <x-turnstile />
-                        <x-button-primary type="submit" data-gtm-event="generate_lead" data-meta-event="Lead">Enviar solicitud corporativa</x-button-primary>
+                        <x-button-primary type="submit" data-gtm-event="generate_lead" data-meta-event="Lead" x-bind:disabled="submitting">
+                            <span x-show="!submitting">Enviar solicitud corporativa</span>
+                            <span x-show="submitting">Enviando...</span>
+                        </x-button-primary>
                     </form>
                 </div>
             </div>

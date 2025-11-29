@@ -97,6 +97,44 @@ document.addEventListener('alpine:init', () => {
         },
     }));
 
+    Alpine.data('toggleEstado', ({ id, initial = 0, presentation = '', precio = 0, stock = 0, token = '' } = {}) => ({
+        id,
+        current: Number(initial),
+        presentation,
+        precio,
+        stock,
+        token,
+        loading: false,
+        async toggle() {
+            if (this.loading) return;
+            this.loading = true;
+            const next = this.current === 1 ? 0 : 1;
+            try {
+                const response = await fetch(`/admin/products/${this.id}/inline`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': this.token,
+                    },
+                    body: JSON.stringify({
+                        presentation: this.presentation,
+                        precio: this.precio,
+                        stock: this.stock,
+                        estado: next,
+                    }),
+                });
+                if (response.ok) {
+                    this.current = next;
+                }
+            } catch {
+                // ignore error
+            } finally {
+                this.loading = false;
+            }
+        },
+    }));
+
     Alpine.data('scrollToTop', ({ threshold = 240 } = {}) => ({
         visible: false,
         threshold,

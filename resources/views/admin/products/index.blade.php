@@ -45,18 +45,34 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <button
-                                    type="button"
-                                    data-toggle-estado
-                                    data-id="{{ $product->id }}"
-                                    data-current="{{ $product->estado }}"
-                                    class="inline-flex items-center gap-2 px-2 py-1 rounded bg-slate-100 text-xs font-semibold text-slate-700 hover:bg-slate-200"
+                                <div
+                                    x-data="toggleEstado({
+                                        id: {{ $product->id }},
+                                        initial: {{ $product->estado }},
+                                        presentation: @js($product->presentation ?? ''),
+                                        precio: @js($product->precio ?? 0),
+                                        stock: @js($product->stock ?? 0),
+                                        token: '{{ csrf_token() }}',
+                                    })"
                                 >
-                                    <span class="w-10 h-5 inline-flex items-center rounded-full transition {{ $product->estado ? 'bg-emerald-500' : 'bg-slate-300' }}">
-                                        <span class="h-4 w-4 bg-white rounded-full shadow transform transition {{ $product->estado ? 'translate-x-5' : 'translate-x-1' }}"></span>
-                                    </span>
-                                    <span>{{ $product->estado ? 'Activo' : 'Inactivo' }}</span>
-                                </button>
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center gap-2 px-2 py-1 rounded bg-slate-100 text-xs font-semibold text-slate-700 hover:bg-slate-200"
+                                        @click="toggle()"
+                                        :class="{ 'opacity-70 pointer-events-none': loading }"
+                                    >
+                                        <span
+                                            class="w-10 h-5 inline-flex items-center rounded-full transition"
+                                            :class="current ? 'bg-emerald-500' : 'bg-slate-300'"
+                                        >
+                                            <span
+                                                class="h-4 w-4 bg-white rounded-full shadow transform transition"
+                                                :class="current ? 'translate-x-5' : 'translate-x-1'"
+                                            ></span>
+                                        </span>
+                                        <span x-text="current ? 'Activo' : 'Inactivo'"></span>
+                                    </button>
+                                </div>
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 <span class="isolate inline-flex rounded-md shadow-xs">
@@ -104,42 +120,35 @@
 
                         const save = async () => {
                             const value = input.value.trim();
-                        if (value === '' || value === null) return cancel();
-                        try {
-                            const response = await fetch(`/admin/products/${id}/inline`, {
-                                method: 'PATCH',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': token,
-                                },
-                                body: JSON.stringify({
-                                    presentation: field === 'presentation' ? value : cell.parentElement.querySelector('[data-field="presentation"]').innerText.trim(),
-                                    precio: field === 'precio' ? value : cell.parentElement.querySelector('[data-field="precio"]').innerText.replace('$','').trim(),
-                                    stock: field === 'stock' ? value : cell.parentElement.querySelector('[data-field="stock"]').innerText.trim(),
-                                    estado: cell.parentElement.querySelector('[data-toggle-estado]')?.dataset.current ?? 1,
-                                }),
-                            });
-                            if (response.ok) {
-                                const json = await response.json();
-                                const estadoVal = json.estado ?? value;
-                                if (field === 'precio') {
-                                    cell.innerHTML = '$' + parseFloat(value).toFixed(2);
-                                } else if (field === 'estado') {
-                                    cell.dataset.value = estadoVal;
-                                    cell.innerHTML = estadoVal == 1
-                                        ? '<span class="px-2 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700">Activo</span>'
-                                        : '<span class="px-2 py-1 text-xs rounded-full bg-slate-100 text-slate-600">Inactivo</span>';
+                            if (value === '' || value === null) return cancel();
+                            try {
+                                const response = await fetch(`/admin/products/${id}/inline`, {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json',
+                                        'X-CSRF-TOKEN': token,
+                                    },
+                                    body: JSON.stringify({
+                                        presentation: field === 'presentation' ? value : cell.parentElement.querySelector('[data-field="presentation"]').innerText.trim(),
+                                        precio: field === 'precio' ? value : cell.parentElement.querySelector('[data-field="precio"]').innerText.replace('$','').trim(),
+                                        stock: field === 'stock' ? value : cell.parentElement.querySelector('[data-field="stock"]').innerText.trim(),
+                                        estado: 1,
+                                    }),
+                                });
+                                if (response.ok) {
+                                    if (field === 'precio') {
+                                        cell.innerHTML = '$' + parseFloat(value).toFixed(2);
+                                    } else {
+                                        cell.textContent = value;
+                                    }
                                 } else {
-                                    cell.textContent = value;
+                                    cancel();
                                 }
-                            } else {
+                            } catch {
                                 cancel();
                             }
-                        } catch {
-                            cancel();
-                        }
-                    };
+                        };
 
                     const cancel = () => {
                         cell.textContent = original ? (field === 'precio' ? '$' + parseFloat(original).toFixed(2) : original) : '—';
@@ -164,45 +173,6 @@
 
                 document.querySelectorAll('[data-inline-edit]').forEach(cell => {
                     cell.addEventListener('dblclick', () => makeEditable(cell));
-                });
-
-                document.querySelectorAll('[data-toggle-estado]').forEach(btn => {
-                    btn.addEventListener('click', async () => {
-                        const row = btn.closest('tr');
-                        const id = btn.dataset.id;
-                        const current = Number(btn.dataset.current || 0);
-                        const next = current === 1 ? 0 : 1;
-                        const presentation = row.querySelector('[data-field="presentation"]')?.innerText.trim() || '';
-                        const precio = row.querySelector('[data-field="precio"]')?.innerText.replace('$','').trim() || 0;
-                        const stock = row.querySelector('[data-field="stock"]')?.innerText.trim() || 0;
-                        try {
-                            const response = await fetch(`/admin/products/${id}/inline`, {
-                                method: 'PATCH',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': token,
-                                },
-                                body: JSON.stringify({
-                                    presentation,
-                                    precio,
-                                    stock,
-                                    estado: next,
-                                }),
-                            });
-                            if (response.ok) {
-                                btn.dataset.current = next;
-                                btn.innerHTML = `
-                                    <span class="w-10 h-5 inline-flex items-center rounded-full transition ${next ? 'bg-emerald-500' : 'bg-slate-300'}">
-                                        <span class="h-4 w-4 bg-white rounded-full shadow transform transition ${next ? 'translate-x-5' : 'translate-x-1'}"></span>
-                                    </span>
-                                    <span>${next ? 'Activo' : 'Inactivo'}</span>
-                                `;
-                            }
-                        } catch {
-                            // ignore on failure
-                        }
-                    });
                 });
 
                 const searchForm = document.querySelector('form[data-filter]');

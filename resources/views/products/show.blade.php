@@ -147,13 +147,13 @@
                     <div class="flex items-center gap-2 text-zinc-600 text-sm ml-auto">
                         <span>Compartir:</span>
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener" aria-label="Compartir en Facebook" class="p-1 rounded hover:text-primary">
-                            <img src="{{ asset('icons/facebook.svg') }}" alt="Facebook" class="w-5 h-5">
+                            <x-social-icon name="facebook" class="w-5 h-5" />
                         </a>
                         <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($product->nombre) }}" target="_blank" rel="noopener" aria-label="Compartir en X" class="p-1 rounded hover:text-primary">
-                            <img src="{{ asset('icons/icons-x.svg') }}" alt="X" class="w-5 h-5">
+                            <x-social-icon name="x" class="w-5 h-5" />
                         </a>
                         <a href="https://api.whatsapp.com/send?text={{ urlencode($product->nombre.' '.url()->current()) }}" target="_blank" rel="noopener" aria-label="Compartir en WhatsApp" class="p-1 rounded hover:text-primary" data-gtm-event="share_whatsapp" data-meta-event="Contact">
-                            <img src="{{ asset('icons/whatsapp.svg') }}" alt="WhatsApp" class="w-5 h-5">
+                            <x-social-icon name="whatsapp" class="w-5 h-5" />
                         </a>
                     </div>
                 </div>

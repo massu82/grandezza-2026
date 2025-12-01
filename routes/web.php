@@ -26,8 +26,14 @@ use Illuminate\Support\Facades\Route;
 /**
  * Rutas públicas
  */
+if (app()->environment('production')) {
+    Route::view('/', 'maintenance');
+}
+
 Route::controller(PageController::class)->group(function () {
-    Route::get('/', 'home');
+    if (!app()->environment('production')) {
+        Route::get('/', 'home');
+    }
     Route::get('/nosotros', 'show')->defaults('slug', 'nosotros');
     Route::get('/contacto', 'show')->defaults('slug', 'contacto');
     Route::get('/bolsa', 'show')->defaults('slug', 'bolsa');

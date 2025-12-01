@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Route;
  */
 if (app()->environment('production')) {
     Route::view('/', 'maintenance');
+    // Ruta temporal para revisión en producción
+    Route::get('/previo', [PageController::class, 'home']);
 }
 
 Route::controller(PageController::class)->group(function () {

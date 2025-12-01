@@ -12,7 +12,6 @@ use App\Http\Controllers\Admin\CandidateController as AdminCandidateController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionPublicController;
@@ -27,30 +26,56 @@ use Illuminate\Support\Facades\Route;
 /**
  * Rutas públicas
  */
-Route::get('/', [HomeController::class, 'index']);
-Route::get('/vinos', [ProductController::class, 'index']);
-Route::get('/vinos/{categoria}/{slug}', [ProductController::class, 'show'])->name('products.show');
-Route::get('/categorias', [CategoryController::class, 'index']);
-Route::get('/categorias/{slug}', [CategoryController::class, 'show']);
-Route::get('/promociones', [PromotionPublicController::class, 'index']);
+Route::controller(PageController::class)->group(function () {
+    Route::get('/', 'home');
+    Route::get('/nosotros', 'show')->defaults('slug', 'nosotros');
+    Route::get('/contacto', 'show')->defaults('slug', 'contacto');
+    Route::get('/bolsa', 'show')->defaults('slug', 'bolsa');
+    Route::get('/terminos', 'show')->defaults('slug', 'terminos');
+    Route::get('/privacidad', 'show')->defaults('slug', 'privacidad');
+    Route::get('/fest', 'show')->defaults('slug', 'fest');
+});
 
-Route::get('/carrito', [CartController::class, 'index']);
-Route::post('/carrito/agregar', [CartController::class, 'store']);
-Route::post('/carrito/actualizar', [CartController::class, 'update']);
-Route::post('/carrito/eliminar', [CartController::class, 'destroy']);
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/vinos', 'index');
+    Route::get('/vinos/{categoria}/{slug}', 'show')->name('products.show');
+});
 
-Route::get('/checkout', [CheckoutController::class, 'index']);
-Route::post('/checkout', [CheckoutController::class, 'store']);
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/categorias', 'index');
+    Route::get('/categorias/{slug}', 'show');
+});
 
-Route::get('/nosotros', [PageController::class, 'show'])->defaults('slug', 'nosotros');
-Route::get('/contacto', [PageController::class, 'show'])->defaults('slug', 'contacto');
-Route::post('/contacto', [ContactController::class, 'store']);
-Route::get('/bolsa', [PageController::class, 'show'])->defaults('slug', 'bolsa');
-Route::post('/bolsa', [JobApplicationController::class, 'store']);
-Route::get('/terminos', [PageController::class, 'show'])->defaults('slug', 'terminos');
-Route::get('/privacidad', [PageController::class, 'show'])->defaults('slug', 'privacidad');
+Route::controller(PromotionPublicController::class)->group(function () {
+    Route::get('/promociones', 'index');
+});
 
-Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+Route::controller(CartController::class)->group(function () {
+    Route::get('/carrito', 'index');
+    Route::post('/carrito/agregar', 'store');
+    Route::post('/carrito/actualizar', 'update');
+    Route::post('/carrito/eliminar', 'destroy');
+});
+
+Route::controller(CheckoutController::class)->group(function () {
+    Route::get('/checkout', 'index');
+    Route::post('/checkout', 'store');
+    Route::post('/checkout/stripe', 'createStripeSession');
+    Route::get('/checkout/success', 'success');
+    Route::get('/checkout/cancel', 'cancel');
+});
+
+Route::controller(ContactController::class)->group(function () {
+    Route::post('/contacto', 'store');
+});
+
+Route::controller(JobApplicationController::class)->group(function () {
+    Route::post('/bolsa', 'store');
+});
+
+Route::controller(SitemapController::class)->group(function () {
+    Route::get('/sitemap.xml', 'index');
+});
 
 /**
  * Rutas de administración

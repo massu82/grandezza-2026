@@ -1,7 +1,26 @@
 @csrf
 <div class="grid md:grid-cols-2 gap-4">
     <x-form-input name="nombre" label="Nombre" :value="$product->nombre ?? ''" required />
-    <x-form-input name="presentation" label="Presentación" :value="$product->presentation ?? ''" placeholder="750 ml, 1 L, 375 ml" required />
+    <div class="space-y-2" x-data="presentationField({ initial: @js(old('presentation', $product->presentation ?? '')) })">
+        <label class="block text-sm font-medium text-slate-700">Presentación <span class="text-secondary">*</span></label>
+        <div class="grid grid-cols-3 gap-2">
+            <input
+                type="text"
+                name="presentation"
+                x-model="value"
+                class="col-span-2 input-control"
+                placeholder="750 ml, 1 L, 375 ml"
+                required
+            >
+            <select x-model="unit" @change="applyUnit" class="select-control" aria-label="Unidad">
+                <option value="">Unidad</option>
+                <option value="ml">ml</option>
+                <option value="L">L</option>
+                <option value="cl">cl</option>
+            </select>
+        </div>
+        <p class="text-xs text-slate-500">Elige una unidad para autocompletar (se añade al final del campo).</p>
+    </div>
     <x-form-select name="categoria_id" label="Categoría" :options="$categorias ?? []" :value="$product->categoria_id ?? null" placeholder="Selecciona" required />
     <x-form-input name="tipo" label="Tipo" :value="$product->tipo ?? ''" required />
     <x-form-input name="pais" label="País" :value="$product->pais ?? ''" />

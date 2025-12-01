@@ -1,5 +1,20 @@
 @php
-    $items = collect(session('cart', []))->map(function ($item) {
+    $resolveImage = function ($base) {
+        $fallback = 'https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=200&q=80';
+        if (!$base) {
+            return $fallback;
+        }
+        $isExternal = str_starts_with($base, 'http');
+        $isLocalAsset = str_starts_with($base, 'img/');
+        $useStorageThumb = !$isExternal && !$isLocalAsset;
+        $baseName = $useStorageThumb ? pathinfo($base, PATHINFO_FILENAME) : null;
+        $thumbWebp = $useStorageThumb ? asset('storage/products/thumb/'.$baseName.'.webp') : null;
+        $thumbJpg = $useStorageThumb ? asset('storage/products/thumb/'.$baseName.'.jpg') : null;
+
+        return $thumbJpg ?? $thumbWebp ?? ($isExternal ? $base : ($isLocalAsset ? asset($base) : $fallback));
+    };
+
+    $items = collect(session('cart', []))->map(function ($item) use ($resolveImage) {
         $price = $item['precio_promocion'] ?? $item['precio'] ?? 0;
         return [
             'product_id' => $item['product_id'],
@@ -8,7 +23,7 @@
             'quantity' => $item['quantity'] ?? 1,
             'precio' => $item['precio'] ?? 0,
             'precio_promocion' => $item['precio_promocion'] ?? null,
-            'imagen' => $item['imagen'] ?? 'https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=200&q=80',
+            'imagen' => $resolveImage($item['imagen'] ?? null),
             'subtotal' => $price * ($item['quantity'] ?? 1),
         ];
     })->values();

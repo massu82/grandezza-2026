@@ -102,11 +102,11 @@
             x-data="mainHeader({
                 cartCount: {{ $cartCount }},
                 links: @js([
-                    ['label' => 'Home', 'href' => url('/')],
-                    ['label' => 'Vinos', 'href' => url('/vinos')],
-                    ['label' => 'Categorías', 'href' => url('/categorias')],
-                    ['label' => 'Nosotros', 'href' => url('/nosotros')],
-                    ['label' => 'Contacto', 'href' => url('/contacto')],
+                    ['label' => 'HOME', 'href' => url('/')],
+                    ['label' => 'VINOS', 'href' => url('/vinos')],
+                    ['label' => 'FEST', 'href' => url('/fest')],
+                    ['label' => 'NOSOTROS', 'href' => url('/nosotros')],
+                    ['label' => 'CONTACTO', 'href' => url('/contacto')],
                 ]),
             })"
             :class="{
@@ -154,8 +154,27 @@
                         </a>
                         <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-zinc-900 uppercase tracking-wide">
                             <template x-for="link in links" :key="link.href">
-                                <a :href="link.href" class="hover:text-primary transition" x-text="link.label"></a>
+                                <a :href="link.href" class="main-nav-link" x-text="link.label"></a>
                             </template>
+                            @if(($navCategories ?? collect())->isNotEmpty())
+                                <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                                    <button type="button" class="hover:text-primary transition inline-flex items-center gap-1">
+                                        CATEGORÍAS
+                                        <span aria-hidden="true">▾</span>
+                                    </button>
+                                    <div
+                                        x-show="open"
+                                        x-transition
+                                        class="absolute right-0 mt-2 w-56 bg-white border border-zinc-200 rounded-xl shadow-lg py-2 z-50"
+                                    >
+                                        @foreach($navCategories as $cat)
+                                            <a href="{{ url('/categorias/'.$cat->slug) }}" class="block px-4 py-2 text-sm text-zinc-800 hover:bg-light hover:text-primary">
+                                                {{ $cat->nombre }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                             <form action="{{ url('/vinos') }}" method="GET" class="relative">
                                 <input type="text" name="q" placeholder="Buscar vinos" class="pl-3 pr-9 py-2 rounded-full border border-zinc-300 bg-white text-sm text-dark focus:border-primary focus:ring-accent">
                                 <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-primary">
@@ -196,6 +215,21 @@
                         <template x-for="link in links" :key="`mobile-${link.href}`">
                             <a :href="link.href" class="block py-2 text-zinc-900 hover:text-primary" x-text="link.label"></a>
                         </template>
+                        @if(($navCategories ?? collect())->isNotEmpty())
+                            <div x-data="{ openCat: false }" class="border-t border-zinc-200 pt-3">
+                                <button type="button" class="w-full text-left py-2 text-zinc-900 font-semibold flex items-center justify-between" @click="openCat = !openCat">
+                                    CATEGORÍAS
+                                    <span aria-hidden="true" x-text="openCat ? '▴' : '▾'"></span>
+                                </button>
+                                <div x-show="openCat" x-transition class="pl-2 space-y-1">
+                                    @foreach($navCategories as $cat)
+                                        <a href="{{ url('/categorias/'.$cat->slug) }}" class="block py-2 text-sm text-zinc-800 hover:text-primary">
+                                            {{ $cat->nombre }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                         <button type="button" @click="$dispatch('cart-open')" class="relative block text-left w-full py-2 text-zinc-900 hover:text-primary inline-flex items-center gap-2" aria-label="Carrito">
                             <x-heroicon-o-shopping-bag class="w-5 h-5" />
                             @if($cartCount > 0)

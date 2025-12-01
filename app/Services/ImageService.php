@@ -6,6 +6,9 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Encoders\JpegEncoder;
+use Intervention\Image\Encoders\WebpEncoder;
+use Intervention\Image\Interfaces\ImageInterface;
 
 class ImageService
 {
@@ -25,14 +28,15 @@ class ImageService
         ];
 
         // imagen original -> webp y jpg
-        $this->saveFormats($file->getRealPath(), $paths['original'], 90, $disk);
+        $original = Image::read($file->getRealPath());
+        $this->saveFormatsFromImage($original, $paths['original'], 90, $disk);
 
         // large
-        $large = Image::read($file->getRealPath())->scaleDown(1600, 1600)->encode();
+        $large = Image::read($file->getRealPath())->scaleDown(1600, 1600);
         $this->saveFormatsFromImage($large, $paths['large'], 85, $disk);
 
         // thumb 400x400
-        $thumb = Image::read($file->getRealPath())->cover(400, 400)->encode();
+        $thumb = Image::read($file->getRealPath())->cover(400, 400);
         $this->saveFormatsFromImage($thumb, $paths['thumb'], 72, $disk);
 
         return $basename;
@@ -61,15 +65,12 @@ class ImageService
         }
     }
 
-    protected function saveFormats(string $sourcePath, string $basePath, int $quality, string $disk): void
+    protected function saveFormatsFromImage(ImageInterface $image, string $basePath, int $quality, string $disk): void
     {
-        $image = Image::read($sourcePath);
-        $this->saveFormatsFromImage($image, $basePath, $quality, $disk);
-    }
+        $webp = $image->encode(new WebpEncoder(quality: $quality));
+        $jpg = $image->encode(new JpegEncoder(quality: $quality));
 
-    protected function saveFormatsFromImage($image, string $basePath, int $quality, string $disk): void
-    {
-        Storage::disk($disk)->put("{$basePath}.webp", $image->toWebp($quality));
-        Storage::disk($disk)->put("{$basePath}.jpg", $image->toJpeg($quality));
+        Storage::disk($disk)->put("{$basePath}.webp", $webp);
+        Storage::disk($disk)->put("{$basePath}.jpg", $jpg);
     }
 }

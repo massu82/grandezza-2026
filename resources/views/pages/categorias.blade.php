@@ -9,8 +9,28 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             @forelse($categories ?? [] as $category)
                 <a href="{{ url('/categorias/'.$category->slug) }}" class="block bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+                    @php
+                        $base = $category->imagen ?? null;
+                        $isExternal = $base && str_starts_with($base, 'http');
+                        $isLocalAsset = $base && str_starts_with($base, 'img/');
+                        $useStorageThumb = $base && !$isExternal && !$isLocalAsset;
+                        $baseName = $useStorageThumb ? pathinfo($base, PATHINFO_FILENAME) : null;
+                        $thumbWebp = $useStorageThumb ? asset('storage/categories/thumb/'.$baseName.'.webp') : null;
+                        $thumbJpg = $useStorageThumb ? asset('storage/categories/thumb/'.$baseName.'.jpg') : null;
+                        $fallback = $isExternal
+                            ? $base
+                            : ($isLocalAsset ? asset($base) : 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80');
+                    @endphp
                     <div class="h-28 w-full overflow-hidden">
-                        <img loading="lazy" src="{{ $category->imagen ?? 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $category->nombre }}" class="w-full h-full object-cover">
+                        <picture>
+                            @if($thumbWebp)
+                                <source srcset="{{ $thumbWebp }}" type="image/webp">
+                            @endif
+                            @if($thumbJpg)
+                                <source srcset="{{ $thumbJpg }}" type="image/jpeg">
+                            @endif
+                            <img loading="lazy" src="{{ $thumbJpg ?? $thumbWebp ?? $fallback }}" alt="{{ $category->nombre }}" class="w-full h-full object-cover">
+                        </picture>
                     </div>
                     <div class="p-4">
                         <h2 class="text-lg font-semibold text-primary" style="font-family: 'Playfair Display', serif;">{{ $category->nombre }}</h2>

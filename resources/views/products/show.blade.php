@@ -1,4 +1,13 @@
-<x-layout-public :title="$product->nombre ?? 'Vino'" :meta-description="$product->descripcion_corta ?? ''">
+@php
+    $pageTitle = ($product->nombre ?? 'Vino').' | Grandezza';
+@endphp
+<x-layout-public :title="$pageTitle" :meta-description="$product->descripcion_corta ?? ''">
+    <section class="w-full bg-gradient-to-b from-zinc-900 via-zinc-950 to-zinc-900 text-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <h1 class="text-3xl font-semibold text-white" style="font-family: 'Playfair Display', serif;">{{ $product->nombre }}</h1>
+            <p class="text-sm text-zinc-200 mt-1">{{ $product->category->nombre ?? 'Vino' }}</p>
+        </div>
+    </section>
     <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <nav class="text-xs text-slate-500 mb-4">
             <a href="{{ url('/') }}" class="hover:text-primary">Home</a>

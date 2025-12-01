@@ -1,12 +1,22 @@
-<x-layout-public title="Vinos | Grandezza">
+@php
+    $currentCategory = $category->nombre ?? null;
+    $pageTitle = $currentCategory ? ($currentCategory.' | Grandezza') : 'Vinos | Grandezza';
+    $metaDescription = $category->descripcion ?? ($currentCategory ? "Explora {$currentCategory} en Grandezza." : null);
+@endphp
+
+<x-layout-public :title="$pageTitle" :metaDescription="$metaDescription">
     <section class="w-full bg-gradient-to-b from-zinc-900 via-zinc-950 to-zinc-900 text-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <h1 class="text-3xl font-semibold text-white" style="font-family: 'Playfair Display', serif;">Vinos</h1>
-            @if(isset($products) && $products->count())
-                <p class="text-sm text-zinc-200 mt-1">Mostrando {{ $products->firstItem() }}–{{ $products->lastItem() }} de {{ $products->total() }} vinos</p>
-            @else
-                <p class="text-sm text-zinc-200 mt-1">Explora nuestra selección.</p>
-            @endif
+            <h1 class="text-3xl font-semibold text-white" style="font-family: 'Playfair Display', serif;">
+                {{ $currentCategory ?? 'Vinos' }}
+            </h1>
+            <p class="text-sm text-zinc-200 mt-1">
+                @if(isset($products) && $products->count())
+                    Mostrando {{ $products->firstItem() }}–{{ $products->lastItem() }} de {{ $products->total() }} {{ $currentCategory ? 'productos' : 'vinos' }}
+                @else
+                    Explora nuestra selección.
+                @endif
+            </p>
         </div>
     </section>
 

@@ -23,7 +23,7 @@ class ProductSeeder extends Seeder
         $countries = ['Argentina', 'Chile', 'España', 'Francia', 'Italia', 'México', 'Estados Unidos', 'Australia'];
         $regions = ['Mendoza', 'Valle de Colchagua', 'Rioja', 'Bordeaux', 'Toscana', 'Valle de Guadalupe', 'Napa', 'Barossa'];
         $types = ['tinto', 'blanco', 'rosado', 'espumoso'];
-        $presentations = ['375 ml', '500 ml', '750 ml', '1 L', '1.5 L'];
+        $presentations = ['375', '500', '750', '1', '1.5'];
         $images = [
             'https://images.unsplash.com/photo-1527169402691-feff5539e52c?auto=format&fit=crop&w=900&q=80',
             'https://images.unsplash.com/photo-1514369118554-e20d93546b30?auto=format&fit=crop&w=900&q=80',

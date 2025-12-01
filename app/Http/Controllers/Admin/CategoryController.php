@@ -5,10 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     public function index(Request $request)
     {
         $query = Category::query();
@@ -30,7 +36,18 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request)
     {
-        Category::create($request->validated());
+        $data = $request->validated();
+        if (!$request->hasFile('imagen')) {
+            unset($data['imagen']);
+        }
+        $slugSource = $request->filled('slug') ? $request->slug : $request->nombre;
+        $data['slug'] = Str::slug((string) $slugSource);
+
+        if ($request->hasFile('imagen')) {
+            $data['imagen'] = $this->imageService->process($request->file('imagen'), 'categories');
+        }
+
+        Category::create($data);
 
         return redirect('/admin/categories')->with('success', 'Categoría creada.');
     }
@@ -47,15 +64,42 @@ class CategoryController extends Controller
 
     public function update(CategoryRequest $request, Category $category)
     {
-        $category->update($request->validated());
+        $data = $request->validated();
+        if (!$request->hasFile('imagen')) {
+            unset($data['imagen']);
+        }
+        $slugSource = $request->filled('slug') ? $request->slug : $request->nombre;
+        $data['slug'] = Str::slug((string) $slugSource);
+
+        if ($request->hasFile('imagen')) {
+            $this->deleteImageIfLocal($category->imagen);
+            $data['imagen'] = $this->imageService->process($request->file('imagen'), 'categories');
+        }
+
+        $category->update($data);
 
         return redirect('/admin/categories')->with('success', 'Categoría actualizada.');
     }
 
     public function destroy(Category $category)
     {
+        $this->deleteImageIfLocal($category->imagen);
         $category->delete();
 
         return redirect()->back()->with('success', 'Categoría eliminada.');
+    }
+
+    protected function deleteImageIfLocal(?string $image): void
+    {
+        if (!$image) {
+            return;
+        }
+
+        if (str_starts_with($image, 'http') || str_starts_with($image, 'img/')) {
+            return;
+        }
+
+        $basename = pathinfo($image, PATHINFO_FILENAME) ?: $image;
+        $this->imageService->delete($basename, 'categories');
     }
 }

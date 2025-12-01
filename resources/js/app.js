@@ -77,6 +77,57 @@ document.addEventListener('alpine:init', () => {
         },
     }));
 
+    Alpine.data('categoryForm', ({ initialSlug = '', initialName = '' } = {}) => ({
+        submitting: false,
+        slug: initialSlug || '',
+        slugEdited: false,
+        start(event) {
+            if (this.submitting) {
+                event?.preventDefault();
+                return;
+            }
+            this.submitting = true;
+        },
+        reset() {
+            this.submitting = false;
+        },
+        onNameInput(event) {
+            if (this.slugEdited) return;
+            this.slug = this.slugify(event.target.value);
+        },
+        onSlugInput(event) {
+            this.slugEdited = true;
+            this.slug = this.slugify(event.target.value);
+        },
+        slugify(value) {
+            return (value || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .slice(0, 255);
+        },
+        init() {
+            if (!this.slug && initialName) {
+                this.slug = this.slugify(initialName);
+            }
+        },
+    }));
+
+    Alpine.data('presentationField', ({ initial = '' } = {}) => ({
+        value: initial || '',
+        unit: '',
+        applyUnit() {
+            const base = (this.value || '').replace(/\s+(ml|l|cl)$/i, '').trim();
+            if (!this.unit) {
+                this.value = base;
+                return;
+            }
+            this.value = base ? `${base} ${this.unit}` : this.unit;
+        },
+    }));
+
     Alpine.data('filtersBar', ({ initial = {} } = {}) => ({
         filters: {
             tipo: initial.tipo || '',

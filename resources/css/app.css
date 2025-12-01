@@ -45,6 +45,35 @@
         @apply bg-zinc-800/80 text-white border-zinc-700 hover:bg-accent hover:text-zinc-900 focus:ring-zinc-600;
         border-radius: 9999px !important;
     }
+
+    .main-nav-link {
+        @apply relative px-1 py-1 transition text-zinc-900 hover:text-primary;
+    }
+    .main-nav-link::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, #b8a06a, #3b1e1f);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 180ms ease;
+    }
+    .main-nav-link:hover::after,
+    .main-nav-link:focus-visible::after {
+        transform: scaleX(1);
+    }
+    .main-nav-link:focus-visible {
+        outline: none;
+        color: #3b1e1f;
+        box-shadow: 0 2px 0 0 #b8a06a;
+    }
+    .main-nav-link:active {
+        color: #b8a06a;
+        transform: translateY(1px);
+    }
 }
 
 @layer base {

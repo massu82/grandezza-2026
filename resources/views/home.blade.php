@@ -191,8 +191,28 @@
                         @forelse($featuredCategories ?? [] as $category)
                             <div class="shrink-0 pb-4" :style="slideStyle()">
                                 <a href="{{ url('/categorias/'.$category->slug) }}" class="block bg-zinc-800 border border-zinc-700 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+                                    @php
+                                        $base = $category->imagen ?? null;
+                                        $isExternal = $base && str_starts_with($base, 'http');
+                                        $isLocalAsset = $base && str_starts_with($base, 'img/');
+                                        $useStorageThumb = $base && !$isExternal && !$isLocalAsset;
+                                        $baseName = $useStorageThumb ? pathinfo($base, PATHINFO_FILENAME) : null;
+                                        $thumbWebp = $useStorageThumb ? asset('storage/categories/thumb/'.$baseName.'.webp') : null;
+                                        $thumbJpg = $useStorageThumb ? asset('storage/categories/thumb/'.$baseName.'.jpg') : null;
+                                        $fallback = $isExternal
+                                            ? $base
+                                            : ($isLocalAsset ? asset($base) : 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80');
+                                    @endphp
                                     <div class="h-32 w-full overflow-hidden">
-                                        <img loading="lazy" src="{{ $category->imagen ?? 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $category->nombre }}" class="w-full h-full object-cover">
+                                        <picture>
+                                            @if($thumbWebp)
+                                                <source srcset="{{ $thumbWebp }}" type="image/webp">
+                                            @endif
+                                            @if($thumbJpg)
+                                                <source srcset="{{ $thumbJpg }}" type="image/jpeg">
+                                            @endif
+                                            <img loading="lazy" src="{{ $thumbJpg ?? $thumbWebp ?? $fallback }}" alt="{{ $category->nombre }}" class="w-full h-full object-cover">
+                                        </picture>
                                     </div>
                                     <div class="p-4">
                                         <p class="text-xs uppercase tracking-wide text-accent">Categoría</p>

@@ -117,13 +117,13 @@
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-3 text-accent">
                         <a href="#" aria-label="Instagram" class="hover:text-white">
-                            <x-social-icon name="instagram" class="w-5 h-5 invert" />
+                            <x-social-icon name="instagram" class="w-5 h-5" />
                         </a>
                         <a href="#" aria-label="Facebook" class="hover:text-white">
-                            <x-social-icon name="facebook" class="w-5 h-5 invert" />
+                            <x-social-icon name="facebook" class="w-5 h-5" />
                         </a>
                         <a href="#" aria-label="X" class="hover:text-white">
-                            <x-social-icon name="x" class="w-5 h-5 invert" />
+                            <x-social-icon name="x" class="w-5 h-5" />
                         </a>
                     </div>
                     <div class="text-white">Evita el exceso</div>
@@ -298,16 +298,16 @@
                     </ul>
                     <div class="mt-4 flex gap-3 text-accent">
                         <a href="#" aria-label="Instagram" class="hover:text-white transition flex items-center">
-                            <x-social-icon name="instagram" class="w-5 h-5 invert" />
+                            <x-social-icon name="instagram" class="w-5 h-5" />
                         </a>
                         <a href="#" aria-label="Facebook" class="hover:text-white transition flex items-center">
-                            <x-social-icon name="facebook" class="w-5 h-5 invert" />
+                            <x-social-icon name="facebook" class="w-5 h-5" />
                         </a>
                         <a href="#" aria-label="X" class="hover:text-white transition flex items-center">
-                            <x-social-icon name="x" class="w-5 h-5 invert" />
+                            <x-social-icon name="x" class="w-5 h-5" />
                         </a>
                         <a href="#" aria-label="WhatsApp" class="hover:text-white transition flex items-center">
-                            <x-social-icon name="whatsapp" class="w-5 h-5 invert" />
+                            <x-social-icon name="whatsapp" class="w-5 h-5" />
                         </a>
                     </div>
                 </div>

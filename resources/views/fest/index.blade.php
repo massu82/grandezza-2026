@@ -436,7 +436,7 @@
             <!-- WhatsApp -->
             <a href="https://api.whatsapp.com/send?text=¡No te pierdas este evento! https://grandezza.com.mx/fest"
                target="_blank"
-               class="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg">
+               class="bg-primary hover:bg-secondary text-white p-3 rounded-full shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path
                         d="M20.52 3.48A11.93 11.93 0 0012 0C5.37 0 0 5.37 0 12a11.9 11.9 0 001.63 6L0 24l6.37-1.66A11.9 11.9 0 0012 24c6.63 0 12-5.37 12-12a11.93 11.93 0 00-3.48-8.52zM12 22c-1.6 0-3.13-.37-4.5-1.05l-.32-.17-3.77.98 1-3.65-.2-.34A9.87 9.87 0 012 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.45-7.24c-.3-.15-1.77-.87-2.05-.96-.27-.1-.47-.15-.66.15s-.76.96-.93 1.16c-.17.2-.34.22-.63.07a8.28 8.28 0 01-2.43-1.5 9.22 9.22 0 01-1.7-2.13c-.18-.3 0-.46.13-.6.13-.13.3-.34.44-.5.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.52-.08-.15-.66-1.6-.91-2.2-.24-.6-.49-.5-.66-.5-.17 0-.37-.02-.57-.02s-.52.07-.8.37c-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.11 3.22 5.1 4.51.71.3 1.26.48 1.7.61.72.23 1.37.2 1.88.12.58-.08 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.09-.13-.27-.2-.57-.35z"/>
@@ -446,7 +446,7 @@
             <!-- Facebook -->
             <a href="https://www.facebook.com/sharer/sharer.php?u=https://grandezza.com.mx/fest"
                target="_blank"
-               class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg">
+               class="bg-primary hover:bg-secondary text-white p-3 rounded-full shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path
                         d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.406.593 24 1.325 24h11.495v-9.294H9.692V11.01h3.128V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.795.143v3.24h-1.918c-1.504 0-1.796.716-1.796 1.765v2.314h3.59l-.467 3.696h-3.123V24h6.116C23.407 24 24 23.407 24 22.674V1.326C24 .593 23.407 0 22.675 0z"/>
@@ -456,7 +456,7 @@
             <!-- Twitter / X -->
             <a href="https://twitter.com/intent/tweet?text=¡No te pierdas este evento!&url=https://grandezza.com.mx/fest"
                target="_blank"
-               class="bg-black hover:bg-stone-900 text-white p-3 rounded-full shadow-lg">
+               class="bg-primary hover:bg-secondary text-white p-3 rounded-full shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path
                         d="M22.46 6c-.77.35-1.6.58-2.46.69a4.22 4.22 0 001.84-2.33 8.27 8.27 0 01-2.65 1.02A4.14 4.14 0 0015.5 4c-2.28 0-4.13 1.86-4.13 4.15 0 .33.03.66.1.97-3.44-.17-6.49-1.83-8.54-4.34a4.15 4.15 0 00-.56 2.09c0 1.44.73 2.7 1.84 3.44a4.08 4.08 0 01-1.87-.52v.05c0 2.01 1.42 3.69 3.3 4.07a4.2 4.2 0 01-1.85.07c.52 1.64 2.02 2.84 3.8 2.88A8.3 8.3 0 012 19.54a11.68 11.68 0 006.29 1.84c7.55 0 11.68-6.26 11.68-11.68l-.01-.53A8.18 8.18 0 0024 5.56a8.3 8.3 0 01-2.36.65 4.1 4.1 0 001.8-2.27z"/>
@@ -466,7 +466,7 @@
 
         <!-- Botón FAB principal -->
         <button @click="open = !open"
-                class="bg-amber-600 hover:bg-amber-600 text-white p-4 rounded-full shadow-xl focus:outline-none transition-all">
+                class="bg-primary hover:bg-secondary text-white p-4 rounded-full shadow-xl focus:outline-none transition-all">
             <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>

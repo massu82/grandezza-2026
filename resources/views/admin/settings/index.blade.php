@@ -8,6 +8,12 @@
             <x-form-input name="email" label="Email de contacto" :value="$settings['email'] ?? ''" />
             <x-form-input name="direccion" label="Dirección" :value="$settings['direccion'] ?? ''" />
             <x-form-textarea name="horarios" label="Horarios" :value="$settings['horarios'] ?? ''" />
+            <x-form-select
+                name="maintenance"
+                label="Modo mantenimiento"
+                :options="['0' => 'Desactivado', '1' => 'Activado']"
+                :value="$settings['maintenance'] ?? '0'"
+            />
             <div class="flex items-center justify-end">
                 <x-button-primary type="submit" x-bind:disabled="submitting">
                     <span x-show="!submitting">Guardar ajustes</span>

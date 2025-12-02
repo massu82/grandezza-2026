@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->appendToGroup('web', \App\Http\Middleware\MinifyHtml::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\MaintenanceMode::class);
+        $middleware->alias([
+            'maintenance' => \App\Http\Middleware\MaintenanceMode::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

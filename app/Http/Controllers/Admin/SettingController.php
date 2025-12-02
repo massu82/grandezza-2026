@@ -20,6 +20,7 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->only(['telefono', 'email', 'direccion', 'horarios']);
+        $data['maintenance'] = $request->boolean('maintenance');
 
         foreach ($data as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);

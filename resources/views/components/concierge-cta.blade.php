@@ -10,7 +10,7 @@
         <div class="flex flex-col sm:flex-row gap-3">
             <a href="{{ url('/contacto') }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-zinc-100 text-zinc-900 text-sm font-semibold hover:bg-zinc-200 transition">Hablar con concierge</a>
             <a href="https://wa.me/5215512345678" target="_blank" rel="noopener" class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-zinc-300 text-sm font-semibold text-white hover:bg-zinc-700 transition gap-2" data-gtm-event="whatsapp_click" data-meta-event="Contact">
-                <x-social-icon name="whatsapp" class="w-5 h-5 invert" />
+                <x-social-icon name="whatsapp" class="w-5 h-5" />
                 WhatsApp
             </a>
         </div>

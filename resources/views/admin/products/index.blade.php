@@ -1,7 +1,16 @@
 <x-layout-admin title="Productos">
-    <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Productos</h1>
-        <a href="{{ url('/admin/products/create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-secondary">Nuevo producto</a>
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-semibold text-primary" style="font-family: 'Playfair Display', serif;">Productos</h1>
+            <div class="flex items-center gap-2">
+                <a href="{{ url('/admin/products/export') }}" class="inline-flex items-center px-3 py-2 rounded-lg border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Exportar CSV</a>
+                <form method="POST" action="{{ url('/admin/products/import') }}" enctype="multipart/form-data" class="flex items-center gap-2">
+                    @csrf
+                    <input type="file" name="csv" accept=".csv,text/csv" class="hidden" id="csv-import" required>
+                    <label for="csv-import" class="inline-flex items-center px-3 py-2 rounded-lg border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer">Subir CSV</label>
+                    <x-button-primary type="submit">Importar</x-button-primary>
+            </form>
+            <a href="{{ url('/admin/products/create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-secondary">Nuevo producto</a>
+        </div>
     </div>
 
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">

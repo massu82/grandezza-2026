@@ -36,8 +36,12 @@ class PromotionController extends Controller
     public function store(PromotionRequest $request)
     {
         $data = $request->validated();
+        $bannerOptions = [
+            'large' => ['mode' => 'cover', 'width' => 1600, 'height' => 500],
+            'thumb' => ['mode' => 'cover', 'width' => 800, 'height' => 250],
+        ];
         if ($request->hasFile('banner')) {
-            $data['banner'] = $this->imageService->process($request->file('banner'), 'promotions');
+            $data['banner'] = $this->imageService->process($request->file('banner'), 'promotions', $bannerOptions);
         }
 
         Promotion::create($data);
@@ -59,11 +63,15 @@ class PromotionController extends Controller
     public function update(PromotionRequest $request, Promotion $promotion)
     {
         $data = $request->validated();
+        $bannerOptions = [
+            'large' => ['mode' => 'cover', 'width' => 1600, 'height' => 500],
+            'thumb' => ['mode' => 'cover', 'width' => 800, 'height' => 250],
+        ];
         if ($request->hasFile('banner')) {
             if ($promotion->banner) {
                 $this->imageService->delete($promotion->banner, 'promotions');
             }
-            $data['banner'] = $this->imageService->process($request->file('banner'), 'promotions');
+            $data['banner'] = $this->imageService->process($request->file('banner'), 'promotions', $bannerOptions);
         }
 
         $promotion->update($data);

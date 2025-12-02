@@ -46,6 +46,14 @@
         border-radius: 9999px !important;
     }
 
+    /* Evitar anillos azules por defecto y usar la paleta propia en formularios */
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus,
+    .form-multiselect:focus {
+        @apply ring-accent border-primary;
+    }
+
     .main-nav-link {
         @apply relative px-1 py-1 transition text-zinc-900 hover:text-primary;
     }
@@ -85,5 +93,12 @@
     }
     * {
         border-radius: 0 !important;
+    }
+
+    /* Reemplazar el ring azul por el acento de la marca en inputs nativos */
+    input:focus,
+    textarea:focus,
+    select:focus {
+        @apply ring-accent border-primary;
     }
 }

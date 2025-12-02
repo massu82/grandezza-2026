@@ -26,16 +26,9 @@ use Illuminate\Support\Facades\Route;
 /**
  * Rutas públicas
  */
-if (app()->environment('production')) {
-    Route::view('/', 'maintenance');
-    // Ruta temporal para revisión en producción
-    Route::get('/previo', [PageController::class, 'home']);
-}
-
 Route::controller(PageController::class)->group(function () {
-    if (!app()->environment('production')) {
-        Route::get('/', 'home');
-    }
+    Route::get('/', 'home');
+    Route::get('/preview-home', 'home');
     Route::get('/nosotros', 'show')->defaults('slug', 'nosotros');
     Route::get('/contacto', 'show')->defaults('slug', 'contacto');
     Route::get('/bolsa', 'show')->defaults('slug', 'bolsa');
@@ -93,6 +86,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::patch('products/{product}/inline', [AdminProductController::class, 'inlineUpdate'])->name('products.inline');
     Route::get('products/{product}/duplicate', [AdminProductController::class, 'duplicate'])->name('products.duplicate');
+    Route::get('products/export', [AdminProductController::class, 'export'])->name('products.export');
+    Route::post('products/import', [AdminProductController::class, 'import'])->name('products.import');
     Route::resource('products', AdminProductController::class);
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('promotions', AdminPromotionController::class);

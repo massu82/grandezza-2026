@@ -5,14 +5,14 @@ namespace App\Services;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\Encoders\JpegEncoder;
 use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\Interfaces\ImageInterface;
+use Intervention\Image\Laravel\Facades\Image;
 
 class ImageService
 {
-    public function process(UploadedFile $file, string $type): string
+    public function process(UploadedFile $file, string $type, array $options = []): string
     {
         $this->validate($file);
 
@@ -32,11 +32,23 @@ class ImageService
         $this->saveFormatsFromImage($original, $paths['original'], 90, $disk);
 
         // large
-        $large = Image::read($file->getRealPath())->scaleDown(1600, 1600);
+        $large = Image::read($file->getRealPath());
+        $largeWidth = $options['large']['width'] ?? 1600;
+        $largeHeight = $options['large']['height'] ?? 1600;
+        $largeMode = $options['large']['mode'] ?? 'scaleDown';
+        $large = $largeMode === 'cover'
+            ? $large->cover($largeWidth, $largeHeight)
+            : $large->scaleDown($largeWidth, $largeHeight);
         $this->saveFormatsFromImage($large, $paths['large'], 85, $disk);
 
-        // thumb 400x400
-        $thumb = Image::read($file->getRealPath())->cover(400, 400);
+        // thumb 400x400 (customizable)
+        $thumb = Image::read($file->getRealPath());
+        $thumbWidth = $options['thumb']['width'] ?? 400;
+        $thumbHeight = $options['thumb']['height'] ?? 400;
+        $thumbMode = $options['thumb']['mode'] ?? 'cover';
+        $thumb = $thumbMode === 'cover'
+            ? $thumb->cover($thumbWidth, $thumbHeight)
+            : $thumb->scaleDown($thumbWidth, $thumbHeight);
         $this->saveFormatsFromImage($thumb, $paths['thumb'], 72, $disk);
 
         return $basename;
@@ -60,8 +72,8 @@ class ImageService
         if (!in_array($file->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
             abort(422, 'Formato de imagen no permitido');
         }
-        if ($file->getSize() > 1024 * 1024) {
-            abort(422, 'Imagen excede el límite de 1MB');
+        if ($file->getSize() > 2 * 1024 * 1024) {
+            abort(422, 'Imagen excede el límite de 2MB');
         }
     }
 

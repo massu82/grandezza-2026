@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -140,6 +141,133 @@ class ProductController extends Controller
             'categorias' => $categorias,
             'product' => $copy,
         ]);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csv' => ['required', 'file', 'mimes:csv,txt'],
+        ]);
+
+        $file = $request->file('csv');
+        $handle = fopen($file->getRealPath(), 'r');
+        if (!$handle) {
+            return redirect()->back()->with('error', 'No se pudo leer el archivo.');
+        }
+
+        $header = fgetcsv($handle, 0, ',');
+        if (!$header) {
+            return redirect()->back()->with('error', 'El CSV no tiene encabezados.');
+        }
+        $header = array_map(fn ($h) => Str::slug($h, '_'), $header);
+
+        $expected = ['nombre', 'presentation', 'categoria', 'precio', 'sku', 'stock'];
+        $missing = array_diff($expected, $header);
+        if (!empty($missing)) {
+            return redirect()->back()->with('error', 'Faltan columnas: '.implode(', ', $missing));
+        }
+
+        $count = 0;
+        while (($row = fgetcsv($handle, 0, ',')) !== false) {
+            // Convertir a UTF-8 por si el CSV viene en otro encoding
+            $row = array_map(fn ($value) => is_string($value) ? mb_convert_encoding($value, 'UTF-8', 'auto') : $value, $row);
+            $data = array_combine($header, $row);
+            if (!$data) {
+                continue;
+            }
+
+            $nombre = trim($data['nombre'] ?? '');
+            $presentation = trim($data['presentation'] ?? '');
+            $categoriaNombre = trim($data['categoria'] ?? '');
+            $precio = (float) ($data['precio'] ?? 0);
+            $sku = trim($data['sku'] ?? '');
+            $stock = (int) ($data['stock'] ?? 0);
+
+            if (!$nombre || !$presentation || !$categoriaNombre || !$precio || !$sku) {
+                continue;
+            }
+
+            $category = Category::firstOrCreate(
+                ['slug' => Str::slug($categoriaNombre)],
+                ['nombre' => $categoriaNombre]
+            );
+
+            $productSlug = Product::generateSlug($nombre, $presentation);
+
+            Product::updateOrCreate(
+                ['sku' => $sku],
+                [
+                    'nombre' => $nombre,
+                    'presentation' => $presentation,
+                    'slug' => $productSlug,
+                    'descripcion_corta' => $data['descripcion_corta'] ?? null,
+                    'precio' => $precio,
+                    'precio_promocion' => !empty($data['precio_promocion']) ? (float) $data['precio_promocion'] : null,
+                    'porcentaje_descuento' => !empty($data['precio_promocion']) ? (int) round((1 - ((float) $data['precio_promocion'] / $precio)) * 100) : null,
+                    'categoria_id' => $category->id,
+                    'stock' => $stock,
+                    'sku' => $sku,
+                    'estado' => 1,
+                    'tipo' => $data['tipo'] ?? 'Vino',
+                    'pais' => $data['pais'] ?? null,
+                ]
+            );
+            $count++;
+        }
+        fclose($handle);
+
+        cache()->forget('nav_categories');
+
+        return redirect()->back()->with('success', "Importación completada: {$count} productos.");
+    }
+
+    public function export()
+    {
+        $filename = 'productos-'.now()->format('Y-m-d_H-i-s').'.csv';
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () {
+            $output = fopen('php://output', 'w');
+            // BOM para UTF-8
+            fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+            fputcsv($output, [
+                'nombre',
+                'presentation',
+                'categoria',
+                'precio',
+                'precio_promocion',
+                'sku',
+                'stock',
+                'tipo',
+                'pais',
+            ]);
+
+            Product::query()
+                ->with('category')
+                ->orderBy('nombre')
+                ->chunk(200, function ($products) use ($output) {
+                    foreach ($products as $product) {
+                        fputcsv($output, [
+                            $product->nombre,
+                            $product->presentation,
+                            $product->category->nombre ?? '',
+                            $product->precio,
+                            $product->precio_promocion,
+                            $product->sku,
+                            $product->stock,
+                            $product->tipo,
+                            $product->pais,
+                        ]);
+                    }
+                });
+
+            fclose($output);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     protected function mapData(ProductRequest $request): array

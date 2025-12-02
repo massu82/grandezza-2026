@@ -1,22 +1,38 @@
 <x-layout-public title="Grandezza | Tiempo del Vino">
     @php
-        $promotionCount = max(1, count($promotions ?? []));
         $featuredCount = max(1, count($featuredProducts ?? []));
         $promoCount = max(1, count($promoProducts ?? []));
         $categoryCount = max(1, count($featuredCategories ?? []));
+        $sliderImages = collect([
+            'slide-1.webp',
+            'slide-2.webp',
+            'slide-3.webp',
+            'slide-4.webp',
+            'slide-5.webp',
+        ])->map(fn ($name) => asset('img/slider/'.$name))->values()->all();
+
+        $slides = array_map(function ($image, $index) {
+            return [
+                'title' => 'Promoción '.($index + 1),
+                'image' => $image,
+                'webp' => null,
+                'jpg' => null,
+            ];
+        }, $sliderImages, array_keys($sliderImages));
+
+        $heroLength = count($slides);
     @endphp
-    <section class="relative bg-gradient-to-b from-zinc-900 via-zinc-950 to-zinc-900 text-white m-0 p-0">
-        <div class="absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_20%_20%,rgba(113,113,122,0.22),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(63,63,70,0.26),transparent_40%)] pointer-events-none"></div>
+    <section class="relative bg-white text-slate-900 m-0 p-0">
         <div
-            class="relative"
+            class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
             x-data="carousel({
-                length: {{ $promotionCount }},
+                length: {{ $heroLength }},
                 autoplay: 5000,
                 loop: true,
                 perView: { 0: 1 },
-                gap: 16,
+                gap: 0,
             })"
-        >
+            >
             <div class="overflow-hidden">
                 <div
                     class="flex transition-transform duration-500 ease-out"
@@ -24,49 +40,30 @@
                     @mouseenter="stopAutoplay"
                     @mouseleave="startAutoplay"
                 >
-                    @forelse($promotions ?? [] as $promotion)
+                    @foreach($slides as $index => $slide)
                         <div class="shrink-0" :style="slideStyle()">
-                            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid md:grid-cols-2 gap-8 items-center">
-                                <div class="space-y-4">
-                                    <p class="text-xs uppercase tracking-[0.2em] text-accent">Promoción</p>
-                                    <h1 class="text-3xl md:text-4xl font-semibold text-white leading-tight" style="font-family: 'Playfair Display', serif;">{{ $promotion->titulo }}</h1>
-                                    <p class="text-base text-zinc-200">{{ $promotion->descripcion }}</p>
-                                    <a href="{{ url('/promociones') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-zinc-600 via-zinc-700 to-zinc-900 text-white text-sm font-semibold hover:from-zinc-700 hover:to-zinc-700 transition focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:ring-offset-2 focus:ring-offset-zinc-900">
-                                        Ver vinos en promoción
-                                        <span aria-hidden="true">→</span>
-                                    </a>
-                                </div>
-                                <div class="w-full h-64 md:h-80 overflow-hidden shadow-lg">
-                                    <img loading="lazy" src="{{ $promotion->banner ?? 'https://images.unsplash.com/photo-1514369118554-e20d93546b30?auto=format&fit=crop&w=1200&q=80' }}" alt="{{ $promotion->titulo }}" class="w-full h-full object-cover">
+                            <div class="w-full py-6">
+                                <div class="w-full h-64 sm:h-80 lg:h-[500px] overflow-hidden shadow-lg rounded-lg">
+                                    <picture>
+                                        @if(!empty($slide['webp']))
+                                            <source srcset="{{ $slide['webp'] }}" type="image/webp">
+                                        @endif
+                                        @if(!empty($slide['jpg']))
+                                            <source srcset="{{ $slide['jpg'] }}" type="image/jpeg">
+                                        @endif
+                                        <img loading="lazy" src="{{ $slide['image'] }}" alt="{{ $slide['title'] ?? 'Promoción' }}" class="w-full h-full object-cover">
+                                    </picture>
                                 </div>
                             </div>
                         </div>
-                    @empty
-                        <div class="shrink-0" :style="slideStyle()">
-                            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center text-white">
-                                <h1 class="text-3xl font-semibold" style="font-family: 'Playfair Display', serif;">Descubre nuestra selección de vinos</h1>
-                                <p class="text-zinc-200 mt-3">Próximamente verás aquí nuestras mejores promociones.</p>
-                            </div>
-                        </div>
-                    @endforelse
+                    @endforeach
                 </div>
             </div>
-            <div class="absolute inset-y-0 left-3 flex items-center">
-                <button type="button" class="slider-nav slider-nav-dark" @click="prev" aria-label="Anterior">‹</button>
+            <div class="absolute inset-y-0 left-6 flex items-center">
+                <button type="button" class="slider-nav" @click="prev" aria-label="Anterior">‹</button>
             </div>
-            <div class="absolute inset-y-0 right-3 flex items-center">
-                <button type="button" class="slider-nav slider-nav-dark" @click="next" aria-label="Siguiente">›</button>
-            </div>
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                <template x-for="index in positions()" :key="`hero-dot-${index}`">
-                    <button
-                        type="button"
-                        class="slider-dot slider-dot-dark"
-                        :class="{ 'slider-dot-active': isActive(index - 1) }"
-                        @click="goTo(index - 1)"
-                        :aria-label="`Ir al slide ${index}`"
-                    ></button>
-                </template>
+            <div class="absolute inset-y-0 right-6 flex items-center">
+                <button type="button" class="slider-nav" @click="next" aria-label="Siguiente">›</button>
             </div>
         </div>
     </section>
